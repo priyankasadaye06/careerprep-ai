@@ -1,31 +1,66 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>CareerPrep AI - Resume Builder</title>
-</head>
-<body>
-    <h2>CareerPrep AI - Basic Resume Builder</h2>
+{% extends "base.html" %}
 
-    <form action="/generate" method="post">
-        <label>Name:</label><br>
-        <input type="text" name="name" required><br><br>
+{% block title %}Resume Builder{% endblock %}
 
-        <label>Email:</label><br>
-        <input type="email" name="email" required><br><br>
+{% block content %}
 
-        <label>Phone:</label><br>
-        <input type="text" name="phone" required><br><br>
+<div class="row justify-content-center">
+    <div class="col-md-8">
 
-        <label>Education:</label><br>
-        <textarea name="education" required></textarea><br><br>
+        <div class="glass-card p-5 shadow-lg">
+            <h3 class="text-center mb-4">
+                Create Your Resume
+            </h3>
 
-        <label>Skills:</label><br>
-        <textarea name="skills" required></textarea><br><br>
+            <form action="/generate" method="POST">
 
-        <label>Projects:</label><br>
-        <textarea name="projects" required></textarea><br><br>
+                <!-- Full Name -->
+                <div class="mb-3">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-control" name="name" required>
+                </div>
 
-        <button type="submit">Generate Resume</button>
-    </form>
-</body>
-</html>
+                <!-- Email -->
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" name="email" required>
+                </div>
+
+                <!-- Phone -->
+                <div class="mb-3">
+                    <label class="form-label">Phone</label>
+                    <input type="text" class="form-control" name="phone" required>
+                </div>
+
+                <!-- Education -->
+                <div class="mb-3">
+                    <label class="form-label">Education</label>
+                    <textarea class="form-control" rows="2" name="education" required></textarea>
+                </div>
+
+                <!-- Skills -->
+                <div class="mb-3">
+                    <label class="form-label">Skills</label>
+                    <textarea class="form-control" rows="2" name="skills" required></textarea>
+                </div>
+
+                <!-- Projects -->
+                <div class="mb-3">
+                    <label class="form-label">Projects</label>
+                    <textarea class="form-control" rows="3" name="projects" required></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center">
+                    <button type="submit" class="btn btn-custom">
+                        Generate Resume
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

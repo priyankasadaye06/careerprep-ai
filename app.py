@@ -11,6 +11,11 @@ os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 @app.route("/")
 def home():
+    return render_template("index.html")
+
+
+@app.route("/resume")
+def resume():
     return render_template("resume_form.html")
 
 @app.route("/generate", methods=["POST"])
