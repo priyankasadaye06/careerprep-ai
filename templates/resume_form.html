@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CareerPrep AI - Resume Builder</title>
+</head>
+<body>
+    <h2>CareerPrep AI - Basic Resume Builder</h2>
+
+    <form action="/generate" method="post">
+        <label>Name:</label><br>
+        <input type="text" name="name" required><br><br>
+
+        <label>Email:</label><br>
+        <input type="email" name="email" required><br><br>
+
+        <label>Phone:</label><br>
+        <input type="text" name="phone" required><br><br>
+
+        <label>Education:</label><br>
+        <textarea name="education" required></textarea><br><br>
+
+        <label>Skills:</label><br>
+        <textarea name="skills" required></textarea><br><br>
+
+        <label>Projects:</label><br>
+        <textarea name="projects" required></textarea><br><br>
+
+        <button type="submit">Generate Resume</button>
+    </form>
+</body>
+</html>
