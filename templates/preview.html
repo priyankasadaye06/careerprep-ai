@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Resume Preview{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+
+        <div class="glass-card p-5 shadow-lg text-white">
+
+            <h2 class="text-center mb-4">Resume Preview</h2>
+
+            <h3>{{ data.name }}</h3>
+            <p>{{ data.email }} | {{ data.phone }}</p>
+
+            <hr>
+
+            <h5>Education</h5>
+            <p>{{ data.education }}</p>
+
+            <h5>Skills</h5>
+            <p>{{ data.skills }}</p>
+
+            <h5>Projects</h5>
+            <p>{{ data.projects }}</p>
+
+            <div class="text-center mt-4">
+                <a href="/download" class="btn btn-custom">
+                    Download PDF
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
