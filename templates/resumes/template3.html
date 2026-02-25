@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+        }
+        img {
+            width: 120px;
+            height: 120px;
+            margin-right: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        h2 {
+            color: #555;
+            border-bottom: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <img src="{{photo_url}}" alt="Profile Photo">
+    <div>
+        <h1>{{name}}</h1>
+        <p>{{title}}</p>
+    </div>
+</div>
+
+<h2>Profile</h2>
+<p>{{profile}}</p>
+
+<h2>Education</h2>
+<p>{{education}}</p>
+
+<h2>Experience</h2>
+<p>{{experience}}</p>
+
+<h2>Skills</h2>
+<ul>
+    {{skills}}
+</ul>
+
+<h2>ATS Enhancements</h2>
+<ul>
+{% for point in enhanced_points %}
+    <li>{{ point }}</li>
+{% endfor %}
+</ul>
+
+</body>
+</html>

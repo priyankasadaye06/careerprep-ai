@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 40px;
+        }
+        .section-title {
+            background: #e6f2e6;
+            padding: 6px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h1>{{name}}</h1>
+<p>{{title}}</p>
+
+<div class="section-title">Education</div>
+<p>{{education}}</p>
+
+<div class="section-title">Relevant Coursework</div>
+<ul>
+    {{coursework}}
+</ul>
+
+<div class="section-title">Experience</div>
+<p>{{experience}}</p>
+
+<div class="section-title">Extracurricular Activities</div>
+<p>{{activities}}</p>
+
+<h2>ATS Enhancements</h2>
+<ul>
+{% for point in enhanced_points %}
+    <li>{{ point }}</li>
+{% endfor %}
+</ul>
+
+</body>
+</html>

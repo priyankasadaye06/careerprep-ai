@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            color: #333;
+        }
+        .header {
+            background: #2f4f6f;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            margin-top: 20px;
+        }
+        .left {
+            width: 30%;
+            padding-right: 20px;
+        }
+        .right {
+            width: 70%;
+        }
+        h2 {
+            border-bottom: 1px solid #ccc;
+            color: #2f4f6f;
+        }
+        ul {
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>{{name}}</h1>
+    <p>{{title}}</p>
+</div>
+
+<div class="container">
+    <div class="left">
+        <h2>Contact</h2>
+        <p>{{email}}</p>
+        <p>{{phone}}</p>
+
+        <h2>Skills</h2>
+        <ul>
+            {{skills}}
+        </ul>
+    </div>
+
+    <div class="right">
+        <h2>Education</h2>
+        <p>{{education}}</p>
+
+        <h2>Experience</h2>
+        <p>{{experience}}</p>
+
+        <h2>Activities</h2>
+        <p>{{activities}}</p>
+    </div>
+</div>
+
+<h2>ATS Enhancements</h2>
+<ul>
+{% for point in enhanced_points %}
+    <li>{{ point }}</li>
+{% endfor %}
+</ul>
+
+</body>
+</html>
