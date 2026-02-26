@@ -1,24 +1,23 @@
 from flask import Flask, render_template, request
-from llm.ats_enhancer import enhance_content
 
 app = Flask(__name__)
 
 @app.route("/")
-def index():
-    return render_template("index.html")
+def landing():
+    return render_template("landing.html")
 
-@app.route("/generate", methods=["POST"])
-def generate_resume():
-    data = request.form.to_dict()
+@app.route("/resume")
+def resume_templates():
+    return render_template("template_select.html")
 
-    enhanced_data = enhance_content(data)
+@app.route("/select-template", methods=["POST"])
+def select_template():
+    selected_template = request.form.get("template")
+    return f"Template selected: {selected_template} (Role selection comes next)"
 
-    template_choice = data.get("template")
-
-    return render_template(
-        f"resumes/{template_choice}.html",
-        **enhanced_data
-    )
+@app.route("/interview")
+def interview_training():
+    return render_template("interview_home.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
