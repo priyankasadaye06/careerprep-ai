@@ -1,54 +1,71 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Select Resume Template</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
+
 <body>
 
 <nav class="navbar">
     <h2 class="logo">CareerPrep-AI</h2>
 </nav>
 
-<section class="template-section"></section>
-<h2>Select a Resume Template</h2>
-<p>Choose a template to start building your ATS-friendly resume</p>
+<section class="template-section">
+    <h2>Select a Resume Template</h2>
+    <p>Choose a template to start building your ATS-friendly resume</p>
 
-<form action="/select-template" method="POST">
+    <form action="/select-template" method="POST">
         <div class="template-grid">
 
-<div class="template-card">
-    <img src="/static/images/templates/template1.png" alt="Template 1">
-    <h3>Classic</h3>
-    <button name="template" value="template1">Select</button>
-</div>
+            <div class="template-card">
+                <img src="/static/images/templates/template1.png" alt="Template 1">
+                <h3>Classic</h3>
+                <button type="submit" name="template" value="template1">
+                    Select
+                </button>
+            </div>
 
-<div class="template-card">
-    <img src="/static/images/templates/template2.png" alt="Template 2">
-    <h3>Corporate Style</h3>
-    <button name="template" value="template2">Select</button>
-</div>
+            <div class="template-card">
+                <img src="/static/images/templates/template2.png" alt="Template 2">
+                <h3>Corporate Style</h3>
+                <button type="submit" name="template" value="template2">
+                    Select
+                </button>
+            </div>
 
-<div class="template-card">
-    <img src="/static/images/templates/template3.png" alt="Template 3">
-    <h3>Minimal</h3>
-    <button name="template" value="template3">Select</button>
-</div>
+            <div class="template-card">
+                <img src="/static/images/templates/template3.png" alt="Template 3">
+                <h3>Minimal</h3>
+                <button type="submit" name="template" value="template3">
+                    Select
+                </button>
+            </div>
 
-<div class="template-card">
-    <img src="/static/images/templates/template4.png" alt="Template 4">
-    <h3>Modern Style</h3>
-    <button name="template" value="template4">Select</button>
-</div>
+            <div class="template-card">
+                <img src="/static/images/templates/template4.png" alt="Template 4">
+                <h3>Modern Style</h3>
+                <button type="submit" name="template" value="template4">
+                    Select
+                </button>
+            </div>
 
-<div class="template-card">
-    <img src="/static/images/templates/template5.png" alt="Template 5">
-    <h3>Modern Sidebar</h3>
-    <button name="template" value="template5">Select</button>
-</div>
-<br><br>
+            <div class="template-card">
+                <img src="/static/images/templates/template5.png" alt="Template 5">
+                <h3>Modern Sidebar</h3>
+                <button type="submit" name="template" value="template5">
+                    Select
+                </button>
+            </div>
 
-<a href="/">← Back to Home</a>
+        </div>
+    </form>
+
+    <div style="margin-top: 30px;">
+        <a href="/">← Back to Home</a>
+    </div>
+</section>
 
 </body>
 </html>

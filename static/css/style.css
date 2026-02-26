@@ -93,3 +93,67 @@ body {
     border-radius: 5px;
     cursor: pointer;
 }
+
+
+/* ROLE SELECTION PAGE */
+
+.role-section {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.role-section h1 {
+    font-size: 34px;
+    margin-bottom: 10px;
+}
+
+.role-section p {
+    font-size: 18px;
+    color: #555;
+}
+
+.role-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+    max-width: 1000px;
+    margin: 40px auto;
+}
+
+.role-card {
+    background: white;
+    border: none;
+    padding: 30px 20px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.role-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.role-card .icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+.role-card h3 {
+    margin: 10px 0;
+    font-size: 20px;
+}
+
+.role-card p {
+    font-size: 14px;
+    color: #666;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: #2563eb;
+    font-weight: bold;
+}

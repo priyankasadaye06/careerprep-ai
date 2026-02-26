@@ -1,75 +1,196 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <title>{{ name }} | Resume</title>
+
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: "Segoe UI", Arial, sans-serif;
             margin: 40px;
-            color: #333;
+            color: #000;
+            line-height: 1.4;
         }
-        .header {
-            background: #2f4f6f;
-            color: white;
-            padding: 20px;
+
+        h1 {
             text-align: center;
+            margin-bottom: 5px;
         }
-        .container {
-            display: flex;
-            margin-top: 20px;
+
+        .contact {
+            text-align: center;
+            font-size: 13px;
+            margin-bottom: 15px;
         }
-        .left {
-            width: 30%;
-            padding-right: 20px;
+
+        .section {
+            margin-top: 18px;
         }
-        .right {
-            width: 70%;
+
+        .section-title {
+            font-weight: bold;
+            border-bottom: 1px solid #000;
+            margin-bottom: 6px;
+            font-size: 14px;
+            letter-spacing: 0.5px;
         }
-        h2 {
-            border-bottom: 1px solid #ccc;
-            color: #2f4f6f;
+
+        .item-title {
+            font-weight: bold;
+            font-size: 13.5px;
         }
+
+        .item-sub {
+            font-style: italic;
+            font-size: 12.5px;
+        }
+
         ul {
-            padding-left: 20px;
+            margin-top: 4px;
+            margin-bottom: 8px;
+        }
+
+        li {
+            font-size: 12.5px;
+        }
+
+        .two-col {
+            font-size: 12.5px;
         }
     </style>
 </head>
+
 <body>
 
-<div class="header">
-    <h1>{{name}}</h1>
-    <p>{{title}}</p>
+<!-- HEADER -->
+<h1>{{ name }}</h1>
+<div class="contact">
+    {{ email }} | {{ phone }} <br>
+    {% if linkedin %}LinkedIn: {{ linkedin }}{% endif %}
+    {% if github %} | GitHub: {{ github }}{% endif %}
 </div>
 
-<div class="container">
-    <div class="left">
-        <h2>Contact</h2>
-        <p>{{email}}</p>
-        <p>{{phone}}</p>
+<!-- SUMMARY -->
+{% if summary %}
+<div class="section">
+    <div class="section-title">SUMMARY</div>
+    <p style="font-size:12.5px;">{{ summary }}</p>
+</div>
+{% endif %}
 
-        <h2>Skills</h2>
+<!-- EXPERIENCE -->
+{% if experience %}
+<div class="section">
+    <div class="section-title">EXPERIENCE</div>
+
+    {% for exp in experience %}
+    <div>
+        <div class="item-title">{{ exp.role }} — {{ exp.company }}</div>
+        <div class="item-sub">{{ exp.duration }} | {{ exp.location }}</div>
         <ul>
-            {{skills}}
+            {% for point in exp.points %}
+            <li>{{ point }}</li>
+            {% endfor %}
         </ul>
     </div>
+    {% endfor %}
+</div>
+{% endif %}
 
-    <div class="right">
-        <h2>Education</h2>
-        <p>{{education}}</p>
+<!-- PROJECTS -->
+{% if projects %}
+<div class="section">
+    <div class="section-title">PROJECTS</div>
 
-        <h2>Experience</h2>
-        <p>{{experience}}</p>
+    {% for project in projects %}
+    <div>
+        <div class="item-title">{{ project.title }}</div>
+        <div class="item-sub">Tech Stack: {{ project.tech }}</div>
+        <ul>
+            {% for point in project.points %}
+            <li>{{ point }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
 
-        <h2>Activities</h2>
-        <p>{{activities}}</p>
+<!-- EDUCATION -->
+{% if education %}
+<div class="section">
+    <div class="section-title">EDUCATION</div>
+
+    {% for edu in education %}
+    <div>
+        <div class="item-title">{{ edu.degree }}</div>
+        <div class="item-sub">{{ edu.college }} | {{ edu.year }} | CGPA: {{ edu.cgpa }}</div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- SKILLS -->
+{% if skills %}
+<div class="section">
+    <div class="section-title">SKILLS</div>
+
+    <div class="two-col">
+        {% if skills.languages %}<b>Languages:</b> {{ skills.languages }}<br>{% endif %}
+        {% if skills.frameworks %}<b>Frameworks:</b> {{ skills.frameworks }}<br>{% endif %}
+        {% if skills.tools %}<b>Tools:</b> {{ skills.tools }}<br>{% endif %}
+        {% if skills.databases %}<b>Databases:</b> {{ skills.databases }}<br>{% endif %}
+        {% if skills.soft %}<b>Soft Skills:</b> {{ skills.soft }}{% endif %}
     </div>
 </div>
+{% endif %}
 
-<h2>ATS Enhancements</h2>
-<ul>
-{% for point in enhanced_points %}
-    <li>{{ point }}</li>
-{% endfor %}
-</ul>
+<!-- ROLE-SPECIFIC SECTIONS -->
+
+{% if role == "Data Analyst" and analytics %}
+<div class="section">
+    <div class="section-title">ANALYTICS</div>
+    <ul>
+        {% for item in analytics %}
+        <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if role == "ML Engineer" and ml_skills %}
+<div class="section">
+    <div class="section-title">MACHINE LEARNING</div>
+    <ul>
+        {% for item in ml_skills %}
+        <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if role == "Software Engineer" and system_design %}
+<div class="section">
+    <div class="section-title">SYSTEM DESIGN</div>
+    <ul>
+        {% for item in system_design %}
+        <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<!-- CERTIFICATIONS -->
+{% if certifications %}
+<div class="section">
+    <div class="section-title">CERTIFICATIONS</div>
+    <ul>
+        {% for cert in certifications %}
+        <li>{{ cert }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
 
 </body>
 </html>
