@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, session, redirect
+
 from mock.sample_resume_data import get_sample_resume_data
+from logic.role_bullets import get_role_based_bullets
 
 app = Flask(__name__)
 app.secret_key = "careerprep_secret"
@@ -28,6 +30,7 @@ def select_template():
 def roles():
     return render_template("role_select.html")
 
+
 @app.route("/set-role/<role>")
 def set_role(role):
     role_map = {
@@ -37,39 +40,56 @@ def set_role(role):
         "web-developer": "Web Developer"
     }
 
-    # clean fallback for custom roles
     clean_role = role.replace("-", " ").title()
-
     session["role"] = role_map.get(role, clean_role)
+
     return redirect("/resume-form")
 
 
 # ---------------- RESUME FORM ----------------
 @app.route("/resume-form")
 def resume_form():
+    template = session.get("template")
     role = session.get("role")
+
+    if not template:
+        return redirect("/resume")
+
     if not role:
         return redirect("/roles")
 
-    return render_template("form.html", role=role)
+    return render_template(
+        "form.html",
+        template=template,
+        role=role
+    )
 
 
 # ---------------- PREVIEW ----------------
 @app.route("/preview", methods=["POST"])
 def preview():
 
-    print("FORM DATA:", request.form)
-
+    # 1️⃣ Load data
     if request.form.get("use_sample") == "true":
         data = get_sample_resume_data()
     else:
-        # TEMP SAFE FALLBACK (no crash)
         data = request.form.to_dict()
 
-    data["role"] = session.get("role")
+    # 2️⃣ Inject session-based context
+    role = session.get("role")
     template = session.get("template", "template1")
 
-    return render_template(f"resumes/{template}.html", **data)
+    data["role"] = role
+    data["template"] = template
+
+    # 3️⃣ Inject role-based bullets
+    data["role_bullets"] = get_role_based_bullets(role)
+
+    # 4️⃣ Render selected template
+    return render_template(
+        f"resumes/{template}.html",
+        data=data
+    )
 
 
 # ---------------- INTERVIEW ----------------

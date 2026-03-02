@@ -1,0 +1,68 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #ffffff;
+    color: #000;
+}
+
+.resume {
+    width: 850px;
+    margin: 30px auto;
+}
+
+.name {
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.contact {
+    text-align: center;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+section {
+    margin-top: 20px;
+}
+
+h2 {
+    font-size: 15px;
+    border-bottom: 1px solid #000;
+    padding-bottom: 3px;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+.block {
+    margin-bottom: 15px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+.right {
+    font-size: 13px;
+}
+
+ul {
+    margin-top: 5px;
+    padding-left: 18px;
+}
+
+li {
+    margin-bottom: 4px;
+    font-size: 13px;
+}
+
+p {
+    font-size: 13px;
+    margin: 5px 0;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+}

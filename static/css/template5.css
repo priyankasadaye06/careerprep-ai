@@ -1,0 +1,17 @@
+body { font-family: Arial; background:#eee; }
+.resume { width:950px; margin:auto; display:flex; background:white; }
+
+aside {
+    width:30%;
+    background:#2f3b4f;
+    color:white;
+    padding:25px;
+}
+
+main { width:70%; padding:25px; }
+
+.timeline {
+    border-left:3px solid #ccc;
+    padding-left:15px;
+    margin-bottom:20px;
+}

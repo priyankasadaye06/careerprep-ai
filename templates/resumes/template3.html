@@ -1,59 +1,93 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-        }
-        .header {
-            display: flex;
-            align-items: center;
-        }
-        img {
-            width: 120px;
-            height: 120px;
-            margin-right: 20px;
-        }
-        h1 {
-            color: #333;
-        }
-        h2 {
-            color: #555;
-            border-bottom: 1px solid #ccc;
-        }
-    </style>
+    <title>{{ name }} | Resume</title>
+    <link rel="stylesheet" href="/static/css/template3.css">
 </head>
 <body>
 
-<div class="header">
-    <img src="{{photo_url}}" alt="Profile Photo">
-    <div>
-        <h1>{{name}}</h1>
-        <p>{{title}}</p>
-    </div>
+<div class="resume">
+
+<header>
+    <h1>{{ name }}</h1>
+    <h3>{{ role }}</h3>
+</header>
+
+<div class="container">
+
+<aside>
+    <section>
+        <h2>CONTACT</h2>
+        <p>{{ phone }}</p>
+        <p>{{ email }}</p>
+        <p>{{ location }}</p>
+        <p>{{ linkedin }}</p>
+    </section>
+
+    <section>
+        <h2>EDUCATION</h2>
+        {% for edu in education %}
+        <p><strong>{{ edu.degree }}</strong></p>
+        <p>{{ edu.college }}</p>
+        <p>GPA: {{ edu.cgpa }}</p>
+        {% endfor %}
+    </section>
+
+    <section>
+        <h2>SKILLS</h2>
+        <ul>
+            {% for skill in skills.technical %}
+            <li>{{ skill }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+</aside>
+
+<main>
+    <section>
+        <h2>PROFILE</h2>
+        <p>{{ summary }}</p>
+    </section>
+
+    <section>
+        <h2>PROJECTS</h2>
+        {% for proj in projects %}
+        <h4>{{ proj.title }}</h4>
+        <ul>
+            {% for p in proj.points %}
+            <li>{{ p }}</li>
+            {% endfor %}
+        </ul>
+        {% endfor %}
+    </section>
+
+    <section>
+        <h2>EXPERIENCE</h2>
+        {% for exp in experience %}
+        <h4>{{ exp.role }} – {{ exp.company }}</h4>
+        <ul>
+            {% for p in exp.points %}
+            <li>{{ p }}</li>
+            {% endfor %}
+        </ul>
+        {% endfor %}
+    </section>
+
+        {% if role_bullets %}
+    <section>
+        <h2>ROLE HIGHLIGHTS</h2>
+        <ul>
+            {% for bullet in role_bullets %}
+                <li>{{ bullet }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+        {% endif %}
+
+</main>
+
 </div>
-
-<h2>Profile</h2>
-<p>{{profile}}</p>
-
-<h2>Education</h2>
-<p>{{education}}</p>
-
-<h2>Experience</h2>
-<p>{{experience}}</p>
-
-<h2>Skills</h2>
-<ul>
-    {{skills}}
-</ul>
-
-<h2>ATS Enhancements</h2>
-<ul>
-{% for point in enhanced_points %}
-    <li>{{ point }}</li>
-{% endfor %}
-</ul>
+</div>
 
 </body>
 </html>

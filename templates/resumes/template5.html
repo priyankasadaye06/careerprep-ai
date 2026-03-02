@@ -1,43 +1,60 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        body {
-            font-family: Arial;
-            margin: 40px;
-        }
-        .section-title {
-            background: #e6f2e6;
-            padding: 6px;
-            font-weight: bold;
-        }
-    </style>
+    <title>{{ name }} | Resume</title>
+    <link rel="stylesheet" href="/static/css/template5.css">
 </head>
 <body>
 
-<h1>{{name}}</h1>
-<p>{{title}}</p>
+<div class="resume">
 
-<div class="section-title">Education</div>
-<p>{{education}}</p>
+<aside>
+    <h1>{{ name }}</h1>
+    <h3>{{ role }}</h3>
 
-<div class="section-title">Relevant Coursework</div>
-<ul>
-    {{coursework}}
-</ul>
+    <section>
+        <h2>CONTACT</h2>
+        <p>{{ phone }}</p>
+        <p>{{ email }}</p>
+    </section>
 
-<div class="section-title">Experience</div>
-<p>{{experience}}</p>
+    <section>
+        <h2>SKILLS</h2>
+        <ul>
+            {% for skill in skills.soft %}
+            <li>{{ skill }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+</aside>
 
-<div class="section-title">Extracurricular Activities</div>
-<p>{{activities}}</p>
+<main>
+    <section>
+        <h2>EXPERIENCE</h2>
+        {% for exp in experience %}
+        <div class="timeline">
+            <span>{{ exp.duration }}</span>
+            <h4>{{ exp.role }}</h4>
+            <p>{{ exp.company }}</p>
+            <p>{{ exp.description }}</p>
+        </div>
+        {% endfor %}
+    </section>
 
-<h2>ATS Enhancements</h2>
-<ul>
-{% for point in enhanced_points %}
-    <li>{{ point }}</li>
-{% endfor %}
-</ul>
+           {% if role_bullets %}
+        <section>
+            <h2>ROLE HIGHLIGHTS</h2>
+            <ul>
+                 {% for bullet in role_bullets %}
+                     <li>{{ bullet }}</li>
+                 {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
+        
+</main>
+
+</div>
 
 </body>
 </html>

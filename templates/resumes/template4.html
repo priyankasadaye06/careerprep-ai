@@ -1,50 +1,75 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        body {
-            font-family: Arial;
-            margin: 40px;
-        }
-        h1 {
-            font-size: 28px;
-        }
-        h2 {
-            font-size: 18px;
-            border-bottom: 1px solid #000;
-        }
-    </style>
+    <title>{{ name }} | Resume</title>
+    <link rel="stylesheet" href="/static/css/template4.css">
 </head>
 <body>
 
-<h1>{{name}}</h1>
-<p>{{email}} | {{phone}}</p>
-<p>LinkedIn: {{linkedin}} | Github: {{github}}</p>
+<div class="resume">
 
-<h2>Education</h2>
-<p>{{education}}</p>
+<main>
+    <h1>{{ name }}</h1>
+    <h3>{{ role }}</h3>
 
-<h2>Experience</h2>
-<p>{{experience}}</p>
+    <section>
+        <h2>SUMMARY</h2>
+        <p>{{ summary }}</p>
+    </section>
 
-<h2>Projects</h2>
-<p>{{projects}}</p>
+    <section>
+        <h2>EXPERIENCE</h2>
+        {% for exp in experience %}
+        <h4>{{ exp.role }} – {{ exp.company }}</h4>
+        <p>{{ exp.duration }} | {{ exp.location }}</p>
+        <ul>
+            {% for p in exp.points %}
+            <li>{{ p }}</li>
+            {% endfor %}
+        </ul>
+        {% endfor %}
+    </section>
+</main>
 
-<h2>Skills</h2>
-<ul>
-    {{skills}}
-</ul>
+<aside>
+    <section>
+        <h2>KEY ACHIEVEMENTS</h2>
+        <ul>
+            {% for b in role_bullets %}
+            <li>{{ b }}</li>
+            {% endfor %}
+        </ul>
+    </section>
 
-<h2>Certificates</h2>
-<p>{{certificates}}</p>
+    <section>
+        <h2>EDUCATION</h2>
+        {% for edu in education %}
+        <p>{{ edu.degree }} – {{ edu.college }}</p>
+        {% endfor %}
+    </section>
 
+    <section>
+        <h2>SKILLS</h2>
+        <ul>
+            {% for skill in skills.tools %}
+            <li>{{ skill }}</li>
+            {% endfor %}
+        </ul>
+    </section>
 
-<h2>ATS Enhancements</h2>
-<ul>
-{% for point in enhanced_points %}
-    <li>{{ point }}</li>
-{% endfor %}
-</ul>
+           {% if role_bullets %}
+        <section>
+            <h2>ROLE HIGHLIGHTS</h2>
+            <ul>
+                 {% for bullet in role_bullets %}
+                     <li>{{ bullet }}</li>
+                 {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
+</aside>
+
+</div>
 
 </body>
 </html>

@@ -2,63 +2,39 @@
 <html>
 <head>
     <title>Resume Form</title>
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
 
-<h2>Resume Details – {{ role }}</h2>
+<h2>Resume Details</h2>
+<p><b>Template:</b> {{ template }} | <b>Role:</b> {{ role }}</p>
 
 <form method="POST" action="/preview">
 
-    <!-- BASIC DETAILS -->
-    <label>Full Name</label><br>
-    <input type="text" name="name" required><br><br>
+    <!-- Hidden values (source of truth) -->
+    <input type="hidden" name="template" value="{{ template }}">
+    <input type="hidden" name="role" value="{{ role }}">
 
-    <label>Email</label><br>
-    <input type="email" name="email" required><br><br>
+    <!-- COMMON FIELDS -->
+    <h3>Basic Information</h3>
+    <input name="name" placeholder="Full Name" required>
+    <input name="email" placeholder="Email">
+    <input name="phone" placeholder="Phone">
 
-    <label>Phone</label><br>
-    <input type="text" name="phone" required><br><br>
+    <!-- DYNAMIC AREA -->
+    <div id="dynamicFields"></div>
 
-    <label>LinkedIn</label><br>
-    <input type="text" name="linkedin"><br><br>
-
-    <label>GitHub</label><br>
-    <input type="text" name="github"><br><br>
-
-    <!-- ROLE-SPECIFIC FIELDS -->
-    {% if role == "Data Analyst" %}
-        <label>Tools (SQL, Excel, Power BI)</label><br>
-        <input type="text" name="tools"><br><br>
-
-    {% elif role == "ML Engineer" %}
-        <label>ML Algorithms</label><br>
-        <input type="text" name="ml_skills"><br><br>
-
-    {% elif role == "Software Engineer" %}
-        <label>System Design Experience</label><br>
-        <input type="text" name="system_design"><br><br>
-    {% endif %}
-
-    <!-- NORMAL SUBMIT -->
-    <button type="submit">Generate Resume</button>
-
-    <!-- SAMPLE DATA BUTTON -->
-    <div style="margin-top: 20px; text-align: center;">
-        <button type="submit" name="use_sample" value="true"
-            style="
-                background: #2d6cdf;
-                color: white;
-                padding: 10px 18px;
-                border: none;
-                border-radius: 6px;
-                cursor: pointer;
-                font-weight: 600;
-            ">
-            ⚡ Use Sample Data
-        </button>
-    </div>
+    <br>
+    <button type="submit">Preview Resume</button>
 
 </form>
+
+<script>
+    const selectedTemplate = "{{ template }}";
+    const selectedRole = "{{ role }}";
+</script>
+
+<script src="/static/js/dynamic_form.js"></script>
 
 </body>
 </html>

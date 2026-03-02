@@ -1,196 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>{{ name }} | Resume</title>
-
-    <style>
-        body {
-            font-family: "Segoe UI", Arial, sans-serif;
-            margin: 40px;
-            color: #000;
-            line-height: 1.4;
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 5px;
-        }
-
-        .contact {
-            text-align: center;
-            font-size: 13px;
-            margin-bottom: 15px;
-        }
-
-        .section {
-            margin-top: 18px;
-        }
-
-        .section-title {
-            font-weight: bold;
-            border-bottom: 1px solid #000;
-            margin-bottom: 6px;
-            font-size: 14px;
-            letter-spacing: 0.5px;
-        }
-
-        .item-title {
-            font-weight: bold;
-            font-size: 13.5px;
-        }
-
-        .item-sub {
-            font-style: italic;
-            font-size: 12.5px;
-        }
-
-        ul {
-            margin-top: 4px;
-            margin-bottom: 8px;
-        }
-
-        li {
-            font-size: 12.5px;
-        }
-
-        .two-col {
-            font-size: 12.5px;
-        }
-    </style>
+    <link rel="stylesheet" href="/static/css/template1.css">
 </head>
-
 <body>
 
-<!-- HEADER -->
-<h1>{{ name }}</h1>
-<div class="contact">
-    {{ email }} | {{ phone }} <br>
-    {% if linkedin %}LinkedIn: {{ linkedin }}{% endif %}
-    {% if github %} | GitHub: {{ github }}{% endif %}
-</div>
+<div class="resume">
 
-<!-- SUMMARY -->
-{% if summary %}
-<div class="section">
-    <div class="section-title">SUMMARY</div>
-    <p style="font-size:12.5px;">{{ summary }}</p>
-</div>
-{% endif %}
+    <!-- HEADER -->
+    <h1 class="name">{{ name }}</h1>
+    <p class="contact">
+        {{ location }} |
+        {{ email }} |
+        {{ phone }} |
+        <a href="{{ linkedin }}">LinkedIn</a> |
+        <a href="{{ github }}">GitHub</a>
+    </p>
 
-<!-- EXPERIENCE -->
-{% if experience %}
-<div class="section">
-    <div class="section-title">EXPERIENCE</div>
+    <!-- SUMMARY -->
+    {% if summary %}
+    <section>
+        <h2>SUMMARY</h2>
+        <p>{{ summary }}</p>
+    </section>
+    {% endif %}
 
-    {% for exp in experience %}
-    <div>
-        <div class="item-title">{{ exp.role }} — {{ exp.company }}</div>
-        <div class="item-sub">{{ exp.duration }} | {{ exp.location }}</div>
-        <ul>
-            {% for point in exp.points %}
-            <li>{{ point }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
+    <!-- EXPERIENCE -->
+    <section>
+        <h2>EXPERIENCE</h2>
 
-<!-- PROJECTS -->
-{% if projects %}
-<div class="section">
-    <div class="section-title">PROJECTS</div>
+        {% for exp in experience %}
+        <div class="block">
+            <div class="row">
+                <strong>{{ exp.role }}</strong>
+                <span class="right">{{ exp.duration }} | {{ exp.location }}</span>
+            </div>
 
-    {% for project in projects %}
-    <div>
-        <div class="item-title">{{ project.title }}</div>
-        <div class="item-sub">Tech Stack: {{ project.tech }}</div>
-        <ul>
-            {% for point in project.points %}
-            <li>{{ point }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
+            <div class="row">
+                <em>{{ exp.company }}</em>
+            </div>
 
-<!-- EDUCATION -->
-{% if education %}
-<div class="section">
-    <div class="section-title">EDUCATION</div>
+            <ul>
+                {% for point in exp.points %}
+                <li>{{ point }}</li>
+                {% endfor %}
 
-    {% for edu in education %}
-    <div>
-        <div class="item-title">{{ edu.degree }}</div>
-        <div class="item-sub">{{ edu.college }} | {{ edu.year }} | CGPA: {{ edu.cgpa }}</div>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
-
-<!-- SKILLS -->
-{% if skills %}
-<div class="section">
-    <div class="section-title">SKILLS</div>
-
-    <div class="two-col">
-        {% if skills.languages %}<b>Languages:</b> {{ skills.languages }}<br>{% endif %}
-        {% if skills.frameworks %}<b>Frameworks:</b> {{ skills.frameworks }}<br>{% endif %}
-        {% if skills.tools %}<b>Tools:</b> {{ skills.tools }}<br>{% endif %}
-        {% if skills.databases %}<b>Databases:</b> {{ skills.databases }}<br>{% endif %}
-        {% if skills.soft %}<b>Soft Skills:</b> {{ skills.soft }}{% endif %}
-    </div>
-</div>
-{% endif %}
-
-<!-- ROLE-SPECIFIC SECTIONS -->
-
-{% if role == "Data Analyst" and analytics %}
-<div class="section">
-    <div class="section-title">ANALYTICS</div>
-    <ul>
-        {% for item in analytics %}
-        <li>{{ item }}</li>
+                <!-- 🔥 ROLE-BASED BULLETS -->
+                {% if role_bullets %}
+                    {% for rb in role_bullets %}
+                        <li>{{ rb }}</li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
         {% endfor %}
-    </ul>
-</div>
-{% endif %}
+    </section>
 
-{% if role == "ML Engineer" and ml_skills %}
-<div class="section">
-    <div class="section-title">MACHINE LEARNING</div>
-    <ul>
-        {% for item in ml_skills %}
-        <li>{{ item }}</li>
+    <!-- EDUCATION -->
+    <section>
+        <h2>EDUCATION</h2>
+        {% for edu in education %}
+        <p>
+            <strong>{{ edu.degree }}</strong><br>
+            {{ edu.college }} — {{ edu.year }}
+        </p>
         {% endfor %}
-    </ul>
-</div>
-{% endif %}
+    </section>
 
-{% if role == "Software Engineer" and system_design %}
-<div class="section">
-    <div class="section-title">SYSTEM DESIGN</div>
-    <ul>
-        {% for item in system_design %}
-        <li>{{ item }}</li>
-        {% endfor %}
-    </ul>
-</div>
-{% endif %}
+    <!-- SKILLS -->
+    <section>
+        <h2>SKILLS</h2>
+        <p><strong>Languages:</strong> {{ skills.languages | join(", ") }}</p>
+        <p><strong>Frameworks:</strong> {{ skills.frameworks | join(", ") }}</p>
+        <p><strong>Tools:</strong> {{ skills.tools | join(", ") }}</p>
+        <p><strong>Databases:</strong> {{ skills.databases | join(", ") }}</p>
+    </section>
 
-<!-- CERTIFICATIONS -->
-{% if certifications %}
-<div class="section">
-    <div class="section-title">CERTIFICATIONS</div>
-    <ul>
-        {% for cert in certifications %}
-        <li>{{ cert }}</li>
-        {% endfor %}
-    </ul>
+
+    {% if role_bullets %}
+        <section>
+            <h2>ROLE HIGHLIGHTS</h2>
+            <ul>
+                 {% for bullet in role_bullets %}
+                     <li>{{ bullet }}</li>
+                 {% endfor %}
+            </ul>
+        </section>
+    {% endif %}
+
 </div>
-{% endif %}
 
 </body>
 </html>

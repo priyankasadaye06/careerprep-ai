@@ -1,0 +1,28 @@
+body { font-family: Arial; background:#f4f6f8; }
+.resume { width:900px; margin:auto; background:white; }
+
+header {
+    background:#1f3a5f;
+    color:white;
+    padding:20px;
+}
+
+.container { display:flex; }
+
+aside {
+    width:30%;
+    background:#eef2f7;
+    padding:20px;
+}
+
+main {
+    width:70%;
+    padding:20px;
+}
+
+h2 {
+    background:#1f3a5f;
+    color:white;
+    padding:6px;
+    font-size:14px;
+}

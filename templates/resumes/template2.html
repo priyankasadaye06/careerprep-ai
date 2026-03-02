@@ -1,58 +1,105 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        body {
-            font-family: "Calibri", sans-serif;
-            margin: 40px;
-        }
-        h1 {
-            text-transform: uppercase;
-            color: #1f3c88;
-        }
-        h2 {
-            background: #f0f0f0;
-            padding: 5px;
-            color: #1f3c88;
-        }
-        .section {
-            margin-bottom: 20px;
-        }
-    </style>
+    <title>{{ name }} | Resume</title>
+    <link rel="stylesheet" href="/static/css/template2.css">
 </head>
 <body>
 
-<h1>{{name}}</h1>
-<p>{{title}} | {{email}} | {{phone}}</p>
+<div class="resume">
 
-<div class="section">
-    <h2>Profile</h2>
-    <p>{{profile}}</p>
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+        <h1 class="name">{{ name }}</h1>
+        <div class="role">{{ role }}</div>
+
+        <section>
+            <h3>CONTACT</h3>
+            <p>{{ email }}</p>
+            <p>{{ phone }}</p>
+            <p>{{ location }}</p>
+            <p><a href="{{ linkedin }}">LinkedIn</a></p>
+            <p><a href="{{ github }}">GitHub</a></p>
+        </section>
+
+        <section>
+            <h3>EDUCATION</h3>
+            {% for edu in education %}
+                <p class="bold">{{ edu.degree }}</p>
+                <p>{{ edu.college }}</p>
+                <p>{{ edu.year }}</p>
+            {% endfor %}
+        </section>
+
+        <section>
+            <h3>SKILLS</h3>
+            <ul>
+                {% for skill in skills.technical %}
+                    <li>{{ skill }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="content">
+
+        <section>
+            <h2>WORK EXPERIENCE</h2>
+
+            {% for exp in experience %}
+            <div class="job">
+                <h3>{{ exp.role }}</h3>
+                <span class="company">{{ exp.company }}</span>
+                <span class="meta">{{ exp.duration }} | {{ exp.location }}</span>
+
+                <ul>
+                    {% for point in exp.points %}
+                        <li>{{ point }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </section>
+
+        <section>
+            <h2>PROJECTS</h2>
+            {% for proj in projects %}
+                <h3>{{ proj.title }}</h3>
+                <p class="tech">{{ proj.tech }}</p>
+                <ul>
+                    {% for p in proj.points %}
+                        <li>{{ p }}</li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        </section>
+
+        {% if certifications %}
+        <section>
+            <h2>CERTIFICATIONS</h2>
+            <ul>
+                {% for cert in certifications %}
+                    <li>{{ cert }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
+
+        {% if role_bullets %}
+        <section>
+            <h2>ROLE HIGHLIGHTS</h2>
+            <ul>
+                 {% for bullet in role_bullets %}
+                     <li>{{ bullet }}</li>
+                 {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
+
+    </main>
+
 </div>
-
-<div class="section">
-    <h2>Education</h2>
-    <p>{{education}}</p>
-</div>
-
-<div class="section">
-    <h2>Work Experience</h2>
-    <p>{{experience}}</p>
-</div>
-
-<div class="section">
-    <h2>Skills</h2>
-    <ul>
-        {{skills}}
-    </ul>
-</div>
-
-<h2>ATS Enhancements</h2>
-<ul>
-{% for point in enhanced_points %}
-    <li>{{ point }}</li>
-{% endfor %}
-</ul>
 
 </body>
 </html>
