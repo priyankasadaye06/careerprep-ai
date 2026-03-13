@@ -87,7 +87,33 @@
 </main>
 
 </div>
+</div>  <!-- resume div ends -->
+
+
+<!-- DOWNLOAD BUTTON -->
+<div style="text-align:center; margin-top:30px;">
+    <form action="/download-resume" method="POST">
+        <input type="hidden" name="resume_html" id="resume_html">
+
+        <button type="submit"
+        style="
+            padding:12px 25px;
+            background:#2d6cdf;
+            color:white;
+            border:none;
+            border-radius:6px;
+            font-size:16px;
+            cursor:pointer;">
+            Download PDF
+        </button>
+    </form>
 </div>
+<script>
+document.querySelector("form").addEventListener("submit", function(){
+    document.getElementById("resume_html").value =
+        document.querySelector(".resume").outerHTML;
+});
+</script>
 
 </body>
 </html>

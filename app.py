@@ -1,10 +1,18 @@
-from flask import Flask, render_template, request, session, redirect
+import pdfkit
+from flask import Flask, render_template, request, session, redirect, make_response
 
 from mock.sample_resume_data import get_sample_resume_data
 from logic.role_bullets import get_role_based_bullets
 
+
 app = Flask(__name__)
 app.secret_key = "careerprep_secret"
+
+
+# PDF configuration
+config = pdfkit.configuration(
+    wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"
+)
 
 
 # ---------------- LANDING ----------------
@@ -90,6 +98,40 @@ def preview():
         f"resumes/{template}.html",
         data=data
     )
+
+
+
+# ----------------DOWNLOAD PDF ----------------
+@app.route("/download-resume", methods=["POST"])
+def download_resume():
+
+    html = request.form.get("resume_html")
+
+    pdf = pdfkit.from_string(html, False, configuration=config)
+
+    response = make_response(pdf)
+    response.headers["Content-Type"] = "application/pdf"
+    response.headers["Content-Disposition"] = "attachment; filename=resume.pdf"
+
+    return response
+
+
+
+# -------------- INTERVIEW UPLOAD -----------------
+
+@app.route("/upload-resume", methods=["POST"])
+def upload_resume():
+
+    file = request.files["resume"]
+
+    path = "uploads/" + file.filename
+    file.save(path)
+
+    return render_template("interview_home.html")
+
+
+
+
 
 
 # ---------------- INTERVIEW ----------------
