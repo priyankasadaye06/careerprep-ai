@@ -18,14 +18,28 @@
         <p>{{ email }}</p>
     </section>
 
-    <section>
-        <h2>SKILLS</h2>
-        <ul>
-            {% for skill in skills.soft %}
-            <li>{{ skill }}</li>
-            {% endfor %}
-        </ul>
-    </section>
+    {% if skills %}
+<section>
+    <h2>SKILLS</h2>
+
+    {% if skills.languages %}
+    <p><strong>Languages:</strong> {{ skills.languages | join(", ") }}</p>
+    {% endif %}
+
+    {% if skills.frameworks %}
+    <p><strong>Frameworks:</strong> {{ skills.frameworks | join(", ") }}</p>
+    {% endif %}
+
+    {% if skills.tools %}
+    <p><strong>Tools:</strong> {{ skills.tools | join(", ") }}</p>
+    {% endif %}
+
+    {% if skills.databases %}
+    <p><strong>Databases:</strong> {{ skills.databases | join(", ") }}</p>
+    {% endif %}
+
+</section>
+{% endif %}
 </aside>
 
 <main>

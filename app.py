@@ -1,4 +1,8 @@
 import pdfkit
+import os
+
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 from flask import Flask, render_template, request, session, redirect, make_response
 
 from mock.sample_resume_data import get_sample_resume_data
@@ -14,6 +18,9 @@ config = pdfkit.configuration(
     wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"
 )
 
+
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # ---------------- LANDING ----------------
 @app.route("/")
@@ -74,30 +81,67 @@ def resume_form():
 
 
 # ---------------- PREVIEW ----------------
+def process_form_data(form):
+
+
+    data = {}
+
+    data["name"] = form.get("name")
+    data["email"] = form.get("email")
+    data["phone"] = form.get("phone")
+    data["location"] = form.get("location")
+    data["linkedin"] = form.get("linkedin")
+    data["github"] = form.get("github")
+
+    data["summary"] = form.get("summary")
+
+# EDUCATION
+    data["education"] = [
+        {
+            "degree": form.get("degree"),
+            "college": form.get("college"),
+            "year": form.get("year")
+        }
+    ]   
+
+# SKILLS
+    data["skills"] = {
+        "languages": form.get("languages", "").split(","),
+        "frameworks": form.get("frameworks", "").split(","),
+        "tools": form.get("tools", "").split(","),
+        "databases": form.get("databases", "").split(",")
+    }
+
+# EXPERIENCE
+    data["experience"] = [
+        {
+            "role": form.get("exp_role"),
+            "company": form.get("exp_company"),
+            "duration": form.get("exp_duration"),
+            "location": form.get("exp_location"),
+            "points": form.get("exp_points", "").split("\n")
+        }
+    ]
+    return data
+
+
+
 @app.route("/preview", methods=["POST"])
 def preview():
 
-    # 1️⃣ Load data
-    if request.form.get("use_sample") == "true":
-        data = get_sample_resume_data()
-    else:
-        data = request.form.to_dict()
 
-    # 2️⃣ Inject session-based context
+    data = process_form_data(request.form)
+
     role = session.get("role")
-    template = session.get("template", "template1")
-
     data["role"] = role
-    data["template"] = template
 
-    # 3️⃣ Inject role-based bullets
     data["role_bullets"] = get_role_based_bullets(role)
 
-    # 4️⃣ Render selected template
-    return render_template(
-        f"resumes/{template}.html",
-        data=data
-    )
+    template = session.get("template", "template1")
+
+    return render_template(f"resumes/{template}.html", **data)
+
+
 
 
 
@@ -119,17 +163,23 @@ def download_resume():
 
 # -------------- INTERVIEW UPLOAD -----------------
 
+
+
+
+
 @app.route("/upload-resume", methods=["POST"])
 def upload_resume():
-
     file = request.files["resume"]
 
-    path = "uploads/" + file.filename
-    file.save(path)
+    if file.filename == "":
+        return "No file selected"
 
-    return render_template("interview_home.html")
+    filepath = os.path.join(UPLOAD_FOLDER, file.filename)
+    file.save(filepath)
 
+    session["resume_path"] = filepath
 
+    return redirect("/analyze-resume")
 
 
 
@@ -138,6 +188,27 @@ def upload_resume():
 @app.route("/interview")
 def interview_training():
     return render_template("interview_home.html")
+
+
+# ----------------Resume analysis -------------
+@app.route("/analyze-resume")
+def analyze_resume():
+
+    resume_path = session.get("resume_path")
+
+    if not resume_path:
+        return redirect("/interview")
+
+    return render_template("resume_analysis.html")
+
+
+
+
+# ----------------- MOCK INTERVIEW --------------
+@app.route("/mock-interview")
+def mock_interview():
+    return render_template("mock_interview.html")
+
 
 
 if __name__ == "__main__":
