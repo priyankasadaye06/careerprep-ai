@@ -6,6 +6,9 @@ from flask import Flask, render_template, request, session, redirect, make_respo
 
 from mock.sample_resume_data import get_sample_resume_data
 from logic.role_bullets import get_role_based_bullets
+from logic.template_parser import extract_template_fields
+from logic.role_fields import ROLE_FIELDS
+
 
 
 from interview.resume_parser import extract_text_from_pdf
@@ -71,20 +74,34 @@ def set_role(role):
 # ---------------- RESUME FORM ----------------
 @app.route("/resume-form")
 def resume_form():
+
     template = session.get("template")
     role = session.get("role")
 
     if not template:
         return redirect("/resume")
 
-    if not role:
-        return redirect("/roles")
+    template_fields = extract_template_fields(template)
+
+    role_fields = ROLE_FIELDS.get(role, [])
 
     return render_template(
         "form.html",
-        template=template,
+        template_fields=template_fields,
+        role_fields=role_fields,
         role=role
     )
+
+
+
+def process_form_data(form):
+
+    data = {}
+
+    for key in form:
+        data[key] = form.get(key)
+
+    return data
 
 
 # ---------------- PREVIEW ----------------

@@ -1,106 +1,50 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Resume Form</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+<title>Resume Details</title>
 </head>
+
 <body>
 
-<h2>Resume Details</h2>
-<p><strong>Template:</strong> {{ template }} |
-<strong>Role:</strong> {{ role }}</p>
+<h2>Resume Form – {{ role }}</h2>
 
-<form method="POST" action="/preview">
+<form action="/preview" method="POST">
 
-    
+<h3>Template Fields</h3>
 
-    <!-- ================= BASIC INFO (ALL TEMPLATES) ================= -->
-    <h3>Basic Information</h3>
+{% for field in template_fields %}
 
-    <label>Name</label>
-    <input name="name">
+<div style="margin-bottom:15px">
 
-    <label>Email</label>
-    <input name="email">
+<label>{{ field.replace("_"," ").title() }}</label>
 
-    <label>Phone</label>
-    <input name="phone">
+<textarea name="{{ field }}" rows="2"></textarea>
 
-    <label>LinkedIn</label>
-    <input name="linkedin">
+</div>
 
-    <label>GitHub</label>
-    <input name="github">
+{% endfor %}
 
-    <hr>
 
-    <!-- ================= TEMPLATE-SPECIFIC SECTIONS ================= -->
+{% if role_fields %}
 
-    {% if template in ["template1", "template2"] %}
-        <h3>Education</h3>
-        <input name="degree" placeholder="Degree">
-        <input name="college" placeholder="College">
-        <input name="cgpa" placeholder="CGPA">
-    {% endif %}
+<h3>{{ role }} Specific Fields</h3>
 
-    {% if template in ["template3", "template4"] %}
-        <h3>Summary</h3>
-        <textarea name="summary" placeholder="2–3 line professional summary"></textarea>
-    {% endif %}
+{% for field in role_fields %}
 
-    {% if template == "template5" %}
-        <h3>Sidebar Skills</h3>
-        <input name="sidebar_skills" placeholder="Comma separated">
-    {% endif %}
+<div style="margin-bottom:15px">
 
-    <hr>
+<label>{{ field.replace("_"," ").title() }}</label>
 
-    <!-- ================= ROLE-SPECIFIC SECTIONS ================= -->
+<textarea name="{{ field }}" rows="2"></textarea>
 
-    {% if role == "Software Engineer" %}
-        <h3>Technical Skills</h3>
-        <input name="tech_skills" placeholder="Python, Java, DSA">
+</div>
 
-        <h3>System Design</h3>
-        <textarea name="system_design"></textarea>
-    {% endif %}
+{% endfor %}
 
-    {% if role == "Data Analyst" %}
-        <h3>Tools</h3>
-        <input name="tools" placeholder="SQL, Excel, Power BI">
+{% endif %}
 
-        <h3>Data Projects Focus</h3>
-        <textarea name="analysis_focus"></textarea>
-    {% endif %}
-
-    {% if role == "ML Engineer" %}
-        <h3>ML Skills</h3>
-        <input name="ml_skills" placeholder="Regression, CNN, NLP">
-
-        <h3>Model Deployment</h3>
-        <textarea name="deployment"></textarea>
-    {% endif %}
-
-    {% if role == "Web Developer" %}
-        <h3>Frontend / Backend</h3>
-        <input name="web_stack" placeholder="React, Flask, Node">
-
-        <h3>UI/UX Experience</h3>
-        <textarea name="ui_experience"></textarea>
-    {% endif %}
-
-    <hr>
-
-    <!-- ================= PROJECTS (COMMON) ================= -->
-
-    <h3>Project</h3>
-    <input name="project_title" placeholder="Project Title">
-    <input name="tech_stack" placeholder="Tech Stack">
-    <textarea name="project_desc" placeholder="Bullet points (comma separated)"></textarea>
-
-    <hr>
-
-    <button type="submit">Preview Resume</button>
+<button type="submit">Preview Resume</button>
 
 </form>
 
