@@ -1,13 +1,20 @@
 import pdfkit
 import os
 
-UPLOAD_FOLDER = "uploads"
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
 from flask import Flask, render_template, request, session, redirect, make_response
 
 from mock.sample_resume_data import get_sample_resume_data
 from logic.role_bullets import get_role_based_bullets
 
+
+from interview.resume_parser import extract_text_from_pdf
+from interview.resume_parser import extract_skills_from_resume
+from interview.question_generator import generate_questions
+
+
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 app = Flask(__name__)
 app.secret_key = "careerprep_secret"
@@ -161,25 +168,32 @@ def download_resume():
 
 
 
-# -------------- INTERVIEW UPLOAD -----------------
-
-
-
+# -------------- RESUME UPLOAD -----------------
 
 
 @app.route("/upload-resume", methods=["POST"])
 def upload_resume():
+
     file = request.files["resume"]
 
-    if file.filename == "":
-        return "No file selected"
+    path = os.path.join(UPLOAD_FOLDER, file.filename)
+    file.save(path)
 
-    filepath = os.path.join(UPLOAD_FOLDER, file.filename)
-    file.save(filepath)
+    text = extract_text_from_pdf(path)
 
-    session["resume_path"] = filepath
+    skills = extract_skills_from_resume(text)
 
-    return redirect("/analyze-resume")
+    questions = generate_questions(skills)
+
+    session["questions"] = questions
+    session["q_index"] = 0
+
+    return render_template(
+        "chat_interview.html",
+        question=questions[0]
+    )
+
+
 
 
 
@@ -194,13 +208,21 @@ def interview_training():
 @app.route("/analyze-resume")
 def analyze_resume():
 
-    resume_path = session.get("resume_path")
+    path = session.get("resume_path")
 
-    if not resume_path:
+    if not path:
         return redirect("/interview")
 
-    return render_template("resume_analysis.html")
+    text = extract_text_from_pdf(path)
 
+    skills = extract_skills_from_resume(text)
+
+    questions = generate_questions(skills)
+
+    return render_template(
+        "mock_interview.html",
+        questions=questions
+    )
 
 
 
@@ -208,6 +230,54 @@ def analyze_resume():
 @app.route("/mock-interview")
 def mock_interview():
     return render_template("mock_interview.html")
+
+
+
+@app.route("/submit-interview", methods=["POST"])
+def submit_interview():
+
+    answers = []
+
+    for key in request.form:
+        answers.append(request.form[key])
+
+    return render_template(
+        "interview_result.html",
+        answers=answers
+    )
+
+
+
+# ------------ Next question chat bot -------------
+
+@app.route("/next-question", methods=["POST"])
+def next_question():
+
+    questions = session.get("questions")
+    index = session.get("q_index", 0)
+
+    index += 1
+
+    if index >= len(questions):
+
+        return "<h2>Interview Completed</h2>"
+
+    session["q_index"] = index
+
+    return render_template(
+        "chat_interview.html",
+        question=questions[index]
+    )
+
+
+
+
+
+
+
+
+
+
 
 
 
