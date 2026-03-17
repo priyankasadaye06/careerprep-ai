@@ -44,6 +44,30 @@
 
 {% endif %}
 
+{% if is_custom %}
+
+<h3>Custom Role Details</h3>
+
+<div>
+    <label>Field 1</label>
+    <input type="text" name="custom_key_1" placeholder="Field name">
+    <input type="text" name="custom_value_1" placeholder="Value">
+</div>
+
+<div>
+    <label>Field 2</label>
+    <input type="text" name="custom_key_2" placeholder="Field name">
+    <input type="text" name="custom_value_2" placeholder="Value">
+</div>
+
+<div>
+    <label>Field 3</label>
+    <input type="text" name="custom_key_3" placeholder="Field name">
+    <input type="text" name="custom_value_3" placeholder="Value">
+</div>
+
+{% endif %}
+
 <button type="submit">Preview Resume</button>
 
 </form>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Interview Chatbot</title>
+<style>
+#chatbox {
+    width: 60%;
+    margin: auto;
+    border: 1px solid #ccc;
+    padding: 20px;
+    height: 400px;
+    overflow-y: scroll;
+}
+.user { color: blue; }
+.bot { color: green; }
+</style>
+</head>
+
+<body>
+
+<h2 align="center">AI Interview Trainer</h2>
+
+<div id="chatbox"></div>
+
+<div style="text-align:center; margin-top:10px;">
+    <input id="msg" placeholder="Type your answer..." style="width:50%;">
+    <button onclick="send()">Send</button>
+</div>
+
+<script>
+async function send() {
+
+    let msg = document.getElementById("msg").value;
+
+    let chatbox = document.getElementById("chatbox");
+
+    chatbox.innerHTML += "<p class='user'><b>You:</b> " + msg + "</p>";
+
+    let res = await fetch("/chat", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({message: msg})
+    });
+
+    let data = await res.json();
+
+    chatbox.innerHTML += "<p class='bot'><b>AI:</b> " + data.reply + "</p>";
+
+    document.getElementById("msg").value = "";
+    chatbox.scrollTop = chatbox.scrollHeight;
+}
+</script>
+
+</body>
+</html>

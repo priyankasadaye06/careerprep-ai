@@ -9,18 +9,18 @@ def extract_template_fields(template_name):
         html = file.read()
 
     pattern = r"{{\s*([a-zA-Z0-9_]+)\s*}}"
-
     fields = re.findall(pattern, html)
 
     ignore = [
         "loop", "exp", "edu", "point",
-        "role_bullets"
+        "role_bullets", "key", "value",
+        "cert", "p", "item"
     ]
 
     clean_fields = []
 
     for f in fields:
-        if f not in ignore and f not in clean_fields:
+        if f not in ignore and not f.endswith("s") and f not in clean_fields:
             clean_fields.append(f)
 
     return clean_fields

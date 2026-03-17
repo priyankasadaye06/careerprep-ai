@@ -55,6 +55,18 @@
         {% endfor %}
     </section>
 
+             {% if projects %}
+    <section>
+        <h2>PROJECTS</h2>
+        <ul>    
+            {% for p in projects %}
+                <li>{{ p }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+
+    
            {% if role_bullets %}
         <section>
             <h2>ROLE HIGHLIGHTS</h2>
@@ -69,6 +81,23 @@
 </main>
 
 </div>  <!-- resume div ends -->
+
+<!-- 🔥 ROLE SECTION (NEW DYNAMIC PART) -->
+    {% if role_section %}
+    <section>
+        <h2>{{ role }} Details</h2>
+        <ul>
+            {% for key, value in role_section.items() %}
+            <li>
+                <strong>{{ key.replace("_"," ").title() }}:</strong>
+                {{ value }}
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+
+</div>  <!-- resume ends -->
 
 
 <!-- DOWNLOAD BUTTON -->

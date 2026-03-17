@@ -62,18 +62,16 @@
             {% endfor %}
         </section>
 
-        <section>
-            <h2>PROJECTS</h2>
-            {% for proj in projects %}
-                <h3>{{ proj.title }}</h3>
-                <p class="tech">{{ proj.tech }}</p>
-                <ul>
-                    {% for p in proj.points %}
-                        <li>{{ p }}</li>
-                    {% endfor %}
-                </ul>
+                 {% if projects %}
+    <section>
+        <h2>PROJECTS</h2>
+        <ul>    
+            {% for p in projects %}
+                <li>{{ p }}</li>
             {% endfor %}
-        </section>
+        </ul>
+    </section>
+    {% endif %}
 
         {% if certifications %}
         <section>
@@ -99,8 +97,24 @@
 
     </main>
 
-</div>  <!-- resume div ends -->
+</div> 
 
+<!-- 🔥 ROLE SECTION (NEW DYNAMIC PART) -->
+    {% if role_section %}
+    <section>
+        <h2>{{ role }} Details</h2>
+        <ul>
+            {% for key, value in role_section.items() %}
+            <li>
+                <strong>{{ key.replace("_"," ").title() }}:</strong>
+                {{ value }}
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+
+</div>  <!-- resume ends -->
 
 <!-- DOWNLOAD BUTTON -->
 <div style="text-align:center; margin-top:30px;">
