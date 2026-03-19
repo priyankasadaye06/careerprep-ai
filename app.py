@@ -8,6 +8,8 @@ from logic.template_parser import extract_template_fields
 from logic.role_fields import ROLE_FIELDS
 from logic.ai_chatbot import generate_interview_response
 
+from logic.company_ai import generate_company_questions
+
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -175,21 +177,21 @@ def upload_resume():
 
     file = request.files["resume"]
 
-    path = os.path.join(UPLOAD_FOLDER, file.filename)
+    path = os.path.join("uploads", file.filename)
     file.save(path)
 
     text = extract_text(path)
 
     session["resume_text"] = text
-    session["chat_history"] = []
 
-    return render_template("chatbot.html")
+    return render_template("interview_options.html")
 
 # ---------------- CHAT ----------------
 @app.route("/chat", methods=["POST"])
 def chat():
 
     user_input = request.json.get("message")
+    print("USER:", user_input)   # ✅ DEBUG
 
     resume_text = session.get("resume_text", "")
     history = session.get("chat_history", [])
@@ -200,12 +202,51 @@ def chat():
         history
     )
 
+    print("AI:", reply)   # ✅ DEBUG
+
     history.append({"role": "user", "content": user_input})
     history.append({"role": "assistant", "content": reply})
 
     session["chat_history"] = history
 
     return {"reply": reply}
+
+
+# ----------- CHATBOT -----------
+
+@app.route("/chatbot")
+def chatbot():
+    session["chat_history"] = []
+    return render_template("chatbot.html")
+
+
+
+
+
+# -------------- COMPANY  FYQ ---------------
+@app.route("/company-fyq")
+def company_page():
+    return render_template("company_select.html")
+
+
+@app.route("/get-company-questions", methods=["POST"])
+def get_company_questions():
+
+    company = request.form.get("company")
+    level = request.form.get("level")
+    resume_text = session.get("resume_text", "")
+
+    questions = generate_company_questions(
+        resume_text + f"\nDifficulty: {level}",
+        company
+    )
+
+    return render_template(
+        "company_questions.html",
+        company=company,
+        questions=questions
+    )
+
 
 # ---------------- RUN ----------------
 if __name__ == "__main__":
