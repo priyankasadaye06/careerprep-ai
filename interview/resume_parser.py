@@ -8,7 +8,9 @@ def extract_text_from_pdf(filepath):
         reader = PyPDF2.PdfReader(file)
 
         for page in reader.pages:
-            text += page.extract_text()
+            page_text = page.extract_text()
+            if page_text:
+                text += page_text
 
     return text
 
@@ -16,22 +18,12 @@ def extract_text_from_pdf(filepath):
 def extract_skills_from_resume(text):
 
     skills_db = [
-        "python",
-        "sql",
-        "machine learning",
-        "flask",
-        "pandas",
-        "numpy",
-        "tensorflow",
-        "pytorch",
-        "excel",
-        "power bi",
-        "git",
-        "docker"
+        "python", "sql", "machine learning", "flask",
+        "pandas", "numpy", "tensorflow", "pytorch",
+        "excel", "power bi", "git", "docker"
     ]
 
     found_skills = []
-
     text = text.lower()
 
     for skill in skills_db:

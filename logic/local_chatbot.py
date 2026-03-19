@@ -9,22 +9,29 @@ def generate_interview_response(resume_text, user_input, history):
         history_text += f"{h['role']}: {h['content']}\n"
 
     prompt = f"""
-You are a smart AI interviewer.
+You are a strict professional interviewer.
 
-Ask interview questions based on resume.
+RULES:
+- DO NOT act like ChatGPT
+- DO NOT explain you are an AI
+- ONLY conduct interview
+- Ask ONE question at a time
+- Ask follow-up questions based on answers
+- Focus on resume
 
-Resume:
+Candidate Resume:
 {resume_text}
 
-Conversation:
+Conversation so far:
 {history_text}
 
-User said:
+Candidate Answer:
 {user_input}
 
-Ask next question:
+Now:
+Ask the NEXT interview question.
 """
 
     response = llm.invoke(prompt)
 
-    return response.strip()
+    return response

@@ -2,25 +2,70 @@
 <html>
 <head>
     <title>AI Interview Chatbot</title>
+
+    <style>
+        body {
+            font-family: Arial;
+        }
+
+        #chat-box {
+            border:1px solid #ccc;
+            padding:15px;
+            height:350px;
+            overflow-y:scroll;
+            display:flex;
+            flex-direction:column;
+        }
+
+        .msg {
+            padding:10px;
+            margin:5px;
+            border-radius:10px;
+            max-width:70%;
+        }
+
+        .user {
+            background:#d1e7ff;
+            align-self:flex-end;
+        }
+
+        .ai {
+            background:#eee;
+            align-self:flex-start;
+        }
+    </style>
 </head>
 
 <body>
 
 <h2>AI Interview Chatbot</h2>
 
-<!-- CHAT DISPLAY -->
-<div id="chat-box" style="border:1px solid #ccc; padding:15px; height:300px; overflow-y:scroll;">
-</div>
+<!-- CHAT -->
+<div id="chat-box"></div>
 
 <br>
 
-<!-- INPUT -->
 <input type="text" id="user_input" placeholder="Type your answer..." style="width:70%; padding:10px;">
-
-<!-- BUTTON -->
 <button onclick="sendMessage()">Send</button>
 
 <script>
+const chatBox = document.getElementById("chat-box");
+
+// ✅ ADD MESSAGE FUNCTION
+function addMessage(text, className) {
+    let div = document.createElement("div");
+    div.className = "msg " + className;
+    div.innerText = text;
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// ✅ FIRST AI MESSAGE
+window.onload = function() {
+    addMessage("Hello! Let's begin your interview. Tell me about yourself.", "ai");
+};
+
+// ✅ SEND MESSAGE
 async function sendMessage() {
 
     let input = document.getElementById("user_input");
@@ -28,10 +73,7 @@ async function sendMessage() {
 
     if (!message) return;
 
-    let chatBox = document.getElementById("chat-box");
-
-    // show user message
-    chatBox.innerHTML += "<p><b>You:</b> " + message + "</p>";
+    addMessage(message, "user");
 
     input.value = "";
 
@@ -45,12 +87,15 @@ async function sendMessage() {
 
     let data = await response.json();
 
-    // show AI response
-    chatBox.innerHTML += "<p><b>AI:</b> " + data.reply + "</p>";
-
-    // auto scroll
-    chatBox.scrollTop = chatBox.scrollHeight;
+    addMessage(data.reply, "ai");
 }
+
+// ✅ ENTER KEY SUPPORT
+document.getElementById("user_input").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") {
+        sendMessage();
+    }
+});
 </script>
 
 </body>

@@ -8,7 +8,10 @@ from logic.template_parser import extract_template_fields
 from logic.role_fields import ROLE_FIELDS
 from logic.ai_chatbot import generate_interview_response
 
+from interview.resume_parser import extract_text_from_pdf, extract_skills_from_resume
 from logic.company_ai import generate_company_questions
+
+
 
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -141,6 +144,7 @@ def preview():
 
     return render_template(f"resumes/{template}.html", **data)
 
+
 # ---------------- DOWNLOAD ----------------
 @app.route("/download-resume", methods=["POST"])
 def download_resume():
@@ -154,6 +158,7 @@ def download_resume():
     response.headers["Content-Disposition"] = "attachment; filename=resume.pdf"
 
     return response
+
 
 # ---------------- INTERVIEW ----------------
 @app.route("/interview")
@@ -180,11 +185,23 @@ def upload_resume():
     path = os.path.join("uploads", file.filename)
     file.save(path)
 
-    text = extract_text(path)
+    # ✅ extract text properly
+    text = extract_text_from_pdf(path)
 
+    # ✅ store for chatbot
     session["resume_text"] = text
 
+    # ✅ store path for future features
+    session["resume_path"] = path
+
+    # ✅ start conversation
+    session["chat_history"] = [
+        {"role": "assistant", "content": "Hello! Let's begin your interview. Tell me about yourself."}
+    ]
+
     return render_template("interview_options.html")
+
+
 
 # ---------------- CHAT ----------------
 @app.route("/chat", methods=["POST"])
