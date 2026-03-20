@@ -1,7 +1,7 @@
 import pdfkit
 import os
 
-from flask import Flask, render_template, request, session, redirect, make_response
+from flask import Flask, render_template, request, session, redirect, make_response, jsonify
 from PyPDF2 import PdfReader
 
 from logic.template_parser import extract_template_fields
@@ -177,6 +177,8 @@ def extract_text(path):
     return text
 
 # ---------------- UPLOAD ----------------
+
+
 @app.route("/upload-resume", methods=["POST"])
 def upload_resume():
 
@@ -185,48 +187,40 @@ def upload_resume():
     path = os.path.join("uploads", file.filename)
     file.save(path)
 
-    # ✅ extract text properly
     text = extract_text_from_pdf(path)
 
-    # ✅ store for chatbot
     session["resume_text"] = text
 
-    # ✅ store path for future features
-    session["resume_path"] = path
+    # 🔥 RESET CHAT MEMORY
+    session["chat_history"] = []
 
-    # ✅ start conversation
-    session["chat_history"] = [
-        {"role": "assistant", "content": "Hello! Let's begin your interview. Tell me about yourself."}
-    ]
-
-    return render_template("interview_options.html")
-
+    return render_template("interview_chat.html")
 
 
 # ---------------- CHAT ----------------
 @app.route("/chat", methods=["POST"])
 def chat():
-
-    user_input = request.json.get("message")
-    print("USER:", user_input)   # ✅ DEBUG
+    user_message = request.json["message"]
 
     resume_text = session.get("resume_text", "")
-    history = session.get("chat_history", [])
+    chat_history = session.get("chat_history", [])
+
+    # 🔥 ADD USER MESSAGE TO MEMORY
+    chat_history.append({"role": "user", "content": user_message})
 
     reply = generate_interview_response(
+        user_message,
         resume_text,
-        user_input,
-        history
+        chat_history
     )
 
-    print("AI:", reply)   # ✅ DEBUG
+    # 🔥 ADD AI RESPONSE TO MEMORY
+    chat_history.append({"role": "assistant", "content": reply})
 
-    history.append({"role": "user", "content": user_input})
-    history.append({"role": "assistant", "content": reply})
+    # SAVE BACK
+    session["chat_history"] = chat_history
 
-    session["chat_history"] = history
-
-    return {"reply": reply}
+    return jsonify({"reply": reply})
 
 
 # ----------- CHATBOT -----------
