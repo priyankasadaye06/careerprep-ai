@@ -2,7 +2,6 @@ import pdfkit
 import os
 
 from flask import Flask, render_template, request, session, redirect, make_response, jsonify
-from PyPDF2 import PdfReader
 
 from logic.template_parser import extract_template_fields
 from logic.role_fields import ROLE_FIELDS
@@ -11,8 +10,7 @@ from logic.ai_chatbot import generate_interview_response
 from interview.resume_parser import extract_text_from_pdf, extract_skills_from_resume
 from logic.company_ai import generate_company_questions
 
-
-
+# ---------------- SETUP ----------------
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -144,7 +142,6 @@ def preview():
 
     return render_template(f"resumes/{template}.html", **data)
 
-
 # ---------------- DOWNLOAD ----------------
 @app.route("/download-resume", methods=["POST"])
 def download_resume():
@@ -159,86 +156,92 @@ def download_resume():
 
     return response
 
-
-# ---------------- INTERVIEW ----------------
+# ---------------- INTERVIEW HOME ----------------
 @app.route("/interview")
 def interview_training():
     return render_template("interview_home.html")
 
-# ---------------- PDF TEXT ----------------
-def extract_text(path):
-
-    reader = PdfReader(path)
-    text = ""
-
-    for page in reader.pages:
-        text += page.extract_text() or ""
-
-    return text
-
-# ---------------- UPLOAD ----------------
-
-
+# ---------------- UPLOAD RESUME ----------------
 @app.route("/upload-resume", methods=["POST"])
 def upload_resume():
 
     file = request.files["resume"]
 
-    path = os.path.join("uploads", file.filename)
+    path = os.path.join(UPLOAD_FOLDER, file.filename)
     file.save(path)
 
+    # 📄 Extract text
     text = extract_text_from_pdf(path)
 
-    session["resume_text"] = text
+    # 🧠 Extract skills
+    skills = extract_skills_from_resume(text)
 
-    # 🔥 RESET CHAT MEMORY
+    # 🔥 Store in session
+    session["resume_text"] = text
+    session["skills"] = skills
     session["chat_history"] = []
 
-    return render_template("interview_chat.html")
-
+    return render_template("interview_options.html")
 
 # ---------------- CHAT ----------------
 @app.route("/chat", methods=["POST"])
 def chat():
-    user_message = request.json["message"]
+    try:
+        user_message = request.json.get("message", "")
 
-    resume_text = session.get("resume_text", "")
-    chat_history = session.get("chat_history", [])
+        if not user_message:
+            return jsonify({"reply": "Please enter a message."})
 
-    # 🔥 ADD USER MESSAGE TO MEMORY
-    chat_history.append({"role": "user", "content": user_message})
+        resume_text = session.get("resume_text", "")
+        chat_history = session.get("chat_history", [])
+        skills = session.get("skills", [])
 
-    reply = generate_interview_response(
-        user_message,
-        resume_text,
-        chat_history
-    )
+        # 🔥 Add user message
+        chat_history.append({
+            "role": "user",
+            "content": user_message
+        })
 
-    # 🔥 ADD AI RESPONSE TO MEMORY
-    chat_history.append({"role": "assistant", "content": reply})
+        # 🔥 Limit memory
+        chat_history = chat_history[-10:]
 
-    # SAVE BACK
-    session["chat_history"] = chat_history
+        # 🧠 Enhance context
+        enhanced_resume = resume_text + f"\n\nSkills: {skills}"
 
-    return jsonify({"reply": reply})
+        # 🤖 Generate response
+        reply = generate_interview_response(
+            user_message,
+            enhanced_resume,
+            chat_history
+        )
 
+        # 🔥 Add AI response
+        chat_history.append({
+            "role": "assistant",
+            "content": reply
+        })
 
-# ----------- CHATBOT -----------
+        # 🔥 Save memory
+        session["chat_history"] = chat_history[-10:]
 
+        return jsonify({"reply": reply})
+
+    except Exception as e:
+        print("ERROR:", str(e))
+        return jsonify({
+            "reply": "⚠️ Error: Make sure Ollama is running (ollama run phi)"
+        })
+
+# ---------------- CHATBOT PAGE ----------------
 @app.route("/chatbot")
 def chatbot():
     session["chat_history"] = []
-    return render_template("chatbot.html")
+    return render_template("interview_chat.html")
 
-
-
-
-
-# -------------- COMPANY  FYQ ---------------
+# ---------------- COMPANY QUESTIONS ----------------
 @app.route("/company-fyq")
 def company_page():
     return render_template("company_select.html")
-
 
 @app.route("/get-company-questions", methods=["POST"])
 def get_company_questions():
@@ -257,7 +260,6 @@ def get_company_questions():
         company=company,
         questions=questions
     )
-
 
 # ---------------- RUN ----------------
 if __name__ == "__main__":
