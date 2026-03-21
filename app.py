@@ -35,48 +35,17 @@ def resume_templates():
 @app.route("/select-template", methods=["POST"])
 def select_template():
     session["template"] = request.form.get("template")
-    return redirect("/roles")
-
-# ---------------- ROLE ----------------
-@app.route("/roles")
-def roles():
-    return render_template("role_select.html")
-
-@app.route("/set-role/<role>")
-def set_role(role):
-
-    role_map = {
-        "software-engineer": "Software Engineer",
-        "data-analyst": "Data Analyst",
-        "ml-engineer": "ML Engineer",
-        "web-developer": "Web Developer"
-    }
-
-    clean_role = role.replace("-", " ").title()
-
-    session["role"] = role_map.get(role, clean_role)
-    session["custom_role"] = role not in role_map
-
     return redirect("/resume-form")
+
+
 
 # ---------------- FORM ----------------
 @app.route("/resume-form")
 def resume_form():
 
     template = session.get("template")
-    role = session.get("role")
-    is_custom = session.get("custom_role", False)
 
-    template_fields = extract_template_fields(template)
-    role_fields = ROLE_FIELDS.get(role, [])
-
-    return render_template(
-        "form.html",
-        template_fields=template_fields,
-        role_fields=role_fields,
-        role=role,
-        is_custom=is_custom
-    )
+    return render_template(f"forms/{template}_form.html")
 
 # ---------------- PROCESS FORM ----------------
 def process_form_data(form):
@@ -116,32 +85,84 @@ def process_form_data(form):
 @app.route("/preview", methods=["POST"])
 def preview():
 
+    # 🔹 Base data
     data = process_form_data(request.form)
 
-    role = session.get("role")
     template = session.get("template")
-    is_custom = session.get("custom_role", False)
 
-    role_fields = ROLE_FIELDS.get(role, [])
-    role_data = {}
+    # 🔥 CUSTOM SECTIONS
+    custom_sections = {}
+    for i in range(1, 11):
+        key = request.form.get(f"custom_key_{i}")
+        value = request.form.get(f"custom_value_{i}")
+        if key and value:
+            custom_sections[key] = value
 
-    for field in role_fields:
-        if data.get(field):
-            role_data[field] = data[field]
+    data["custom_sections"] = custom_sections
 
-    if is_custom:
-        for i in range(1, 4):
-            key = request.form.get(f"custom_key_{i}")
-            value = request.form.get(f"custom_value_{i}")
+    # 🔹 PROJECTS
+    projects = request.form.get("projects", "")
+    data["projects"] = [p.strip() for p in projects.split("\n") if p.strip()]
 
-            if key and value:
-                role_data[key] = value
+    # -------- ✅ SKILLS --------
+    skills = {
+        "languages": request.form.get("skills_languages", "").split(","),
+        "frameworks": request.form.get("skills_frameworks", "").split(","),
+        "tools": request.form.get("skills_tools", "").split(","),
+        "databases": request.form.get("skills_databases", "").split(","),
+    }
 
-    data["role_section"] = role_data
-    data["role"] = role
+    for key in skills:
+        skills[key] = [s.strip() for s in skills[key] if s.strip()]
+
+    data["skills"] = skills if any(skills.values()) else None
+
+    # -------- ✅ EDUCATION --------
+    education = []
+
+    for i in range(1, 5):
+        degree = request.form.get(f"edu_degree_{i}")
+        college = request.form.get(f"edu_college_{i}")
+        cgpa = request.form.get(f"edu_cgpa_{i}")
+
+        if degree or college:
+            education.append({
+                "degree": degree,
+                "college": college,
+                "cgpa": cgpa
+            })
+
+    data["education"] = education if education else None
+
+    # -------- ✅ EXPERIENCE --------
+    experience = []
+
+    for i in range(1, 5):
+        role = request.form.get(f"exp_role_{i}")
+        company = request.form.get(f"exp_company_{i}")
+        duration = request.form.get(f"exp_duration_{i}")
+        location = request.form.get(f"exp_location_{i}")
+        points = request.form.get(f"exp_points_{i}", "").split("\n")
+
+        points = [p.strip() for p in points if p.strip()]
+
+        if role or company:
+            experience.append({
+                "role": role,
+                "company": company,
+                "duration": duration,
+                "location": location,
+                "points": points
+            })
+
+    data["experience"] = experience if experience else None
+
+    # 🔥 DEBUG (optional)
+    print("SKILLS:", data["skills"])
+    print("EDUCATION:", data["education"])
+    print("EXPERIENCE:", data["experience"])
 
     return render_template(f"resumes/{template}.html", **data)
-
 # ---------------- DOWNLOAD ----------------
 @app.route("/download-resume", methods=["POST"])
 def download_resume():

@@ -1,6 +1,73 @@
 <!DOCTYPE html>
 <html>
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #2d6cdf, #6ea8fe);
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
+    .upload-card {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        width: 400px;
+        text-align: center;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        animation: fadeIn 0.5s ease;
+    }
+
+    h1 {
+        margin-bottom: 10px;
+        color: #2d6cdf;
+    }
+
+    p {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 25px;
+    }
+
+    input[type="file"] {
+        border: 2px dashed #2d6cdf;
+        padding: 20px;
+        width: 100%;
+        border-radius: 10px;
+        cursor: pointer;
+        background: #f4f7fb;
+        margin-bottom: 20px;
+    }
+
+    input[type="file"]:hover {
+        background: #eef3ff;
+    }
+
+    .next-btn {
+        width: 100%;
+        padding: 12px;
+        background: #2d6cdf;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .next-btn:hover {
+        background: #1b4fbf;
+        transform: translateY(-2px);
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
 <head>
 <title>Interview Trainer</title>
 </head>
@@ -9,16 +76,21 @@
 
 <h1>Upload Resume for AI Interview</h1>
 
-<form action="/upload-resume" method="POST" enctype="multipart/form-data">
 
-<input type="file" name="resume" required>
+<div class="upload-card">
+    <h1>Upload Resume</h1>
+    <p>Select your resume to continue</p>
 
-<br><br>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="resume" required>
 
-<button type="submit">Start Interview</button>
-
-</form>
+        <button type="submit" class="next-btn">
+            Next →
+        </button>
+    </form>
+</div>
 
 </body>
+
 
 </html>

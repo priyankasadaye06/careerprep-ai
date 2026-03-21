@@ -1,9 +1,139 @@
-<h2>{{ company }} Interview Questions</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Company Interview Questions</title>
 
-<div style="width:70%; margin:auto;">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
 
-    <pre style="background:#f5f5f5; padding:20px; border-radius:10px;">
-{{ questions }}
-    </pre>
+        .container {
+            width: 80%;
+            margin: 30px auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .score {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2ecc71;
+        }
+
+        .section-title {
+            margin-top: 10px;
+            color: #444;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        .missing {
+            color: #e74c3c;
+        }
+
+        .matched {
+            color: #27ae60;
+        }
+
+        .questions {
+            white-space: pre-wrap;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>{{ result.company }} Interview Preparation</h1>
+
+    <!-- SCORE -->
+    <div class="card">
+        <p class="score">Match Score: {{ result.score }}%</p>
+    </div>
+
+    <!-- MATCHED SKILLS -->
+    <div class="card">
+        <h3 class="section-title">✅ Matched Skills</h3>
+        <ul>
+            {% for skill in result.matched_skills %}
+                <li class="matched">{{ skill }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- MISSING SKILLS -->
+    <div class="card">
+        <h3 class="section-title">❌ Missing Skills</h3>
+        <ul>
+            {% for skill in result.missing_skills %}
+                <li class="missing">{{ skill }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- SUGGESTIONS -->
+    <div class="card">
+        <h3 class="section-title">💡 Suggestions</h3>
+        <ul>
+            {% for suggestion in result.suggestions %}
+                <li>{{ suggestion }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- QUESTIONS -->
+    <div class="card">
+        <h3 class="section-title">📌 Interview Questions</h3>
+        <div class="questions">
+            {{ result.questions }}
+        </div>
+    </div>
+
+    <!-- BACK BUTTON -->
+    <a href="/company-fyq" class="btn">⬅ Back</a>
 
 </div>
+
+</body>
+</html>

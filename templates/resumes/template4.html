@@ -10,13 +10,17 @@
 
 <main>
     <h1>{{ name }}</h1>
-    <h3>{{ role }}</h3>
 
+    <!-- SUMMARY -->
+    {% if summary %}
     <section>
         <h2>SUMMARY</h2>
         <p>{{ summary }}</p>
     </section>
+    {% endif %}
 
+    <!-- EXPERIENCE -->
+    {% if experience %}
     <section>
         <h2>EXPERIENCE</h2>
         {% for exp in experience %}
@@ -24,40 +28,17 @@
         <p>{{ exp.duration }} | {{ exp.location }}</p>
         <ul>
             {% for p in exp.points %}
-            <li>{{ p }}</li>
+                {% if p %}
+                <li>{{ p }}</li>
+                {% endif %}
             {% endfor %}
         </ul>
         {% endfor %}
     </section>
-</main>
+    {% endif %}
 
-<aside>
-    <section>
-        <h2>KEY ACHIEVEMENTS</h2>
-        <ul>
-            {% for b in role_bullets %}
-            <li>{{ b }}</li>
-            {% endfor %}
-        </ul>
-    </section>
-
-    <section>
-        <h2>EDUCATION</h2>
-        {% for edu in education %}
-        <p>{{ edu.degree }} – {{ edu.college }}</p>
-        {% endfor %}
-    </section>
-
-    <section>
-        <h2>SKILLS</h2>
-        <ul>
-            {% for skill in skills.tools %}
-            <li>{{ skill }}</li>
-            {% endfor %}
-        </ul>
-    </section>
-
-             {% if projects %}
+    <!-- PROJECTS -->
+    {% if projects %}
     <section>
         <h2>PROJECTS</h2>
         <ul>    
@@ -68,41 +49,80 @@
     </section>
     {% endif %}
 
-    
-           {% if role_bullets %}
-        <section>
-            <h2>ROLE HIGHLIGHTS</h2>
-            <ul>
-                 {% for bullet in role_bullets %}
-                     <li>{{ bullet }}</li>
-                 {% endfor %}
-            </ul>
-        </section>
-        {% endif %}
-</aside>
+</main>
 
-</div>  
+<aside>
 
-<!-- 🔥 ROLE SECTION (NEW DYNAMIC PART) -->
-    {% if role_section %}
+    <!-- EDUCATION -->
+    {% if education %}
     <section>
-        <h2>{{ role }} Details</h2>
+        <h2>EDUCATION</h2>
+        {% for edu in education %}
+        <p>
+            <strong>{{ edu.degree }}</strong><br>
+            {{ edu.college }}
+            {% if edu.year %} — {{ edu.year }}{% endif %}
+        </p>
+        {% endfor %}
+    </section>
+    {% endif %}
+
+    <!-- SKILLS -->
+    {% if skills %}
+    <section>
+        <h2>SKILLS</h2>
+
+        {% if skills.languages %}
+        <p><strong>Languages:</strong><br>
+        {{ skills.languages | join(", ") }}</p>
+        {% endif %}
+
+        {% if skills.frameworks %}
+        <p><strong>Frameworks:</strong><br>
+        {{ skills.frameworks | join(", ") }}</p>
+        {% endif %}
+
+        {% if skills.tools %}
+        <p><strong>Tools:</strong><br>
+        {{ skills.tools | join(", ") }}</p>
+        {% endif %}
+
+        {% if skills.databases %}
+        <p><strong>Databases:</strong><br>
+        {{ skills.databases | join(", ") }}</p>
+        {% endif %}
+
+    </section>
+    {% endif %}
+
+    <!-- 🔥 CUSTOM SECTIONS -->
+    {% if custom_sections %}
+    <section>
+        <h2>ADDITIONAL INFORMATION</h2>
         <ul>
-            {% for key, value in role_section.items() %}
+            {% for key, value in custom_sections.items() %}
             <li>
-                <strong>{{ key.replace("_"," ").title() }}:</strong>
-                {{ value }}
+                <strong>{{ key }}:</strong>
+                <ul>
+                    {% for line in value.split('\n') %}
+                        {% if line %}
+                        <li>{{ line }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
             </li>
             {% endfor %}
         </ul>
     </section>
     {% endif %}
 
-</div>  <!-- resume ends -->
+</aside>
+
+</div>
 
 <!-- DOWNLOAD BUTTON -->
 <div style="text-align:center; margin-top:30px;">
-    <form action="/download-resume" method="POST">
+    <form action="/download-resume" method="POST" id="downloadForm">
         <input type="hidden" name="resume_html" id="resume_html">
 
         <button type="submit"
@@ -118,11 +138,13 @@
         </button>
     </form>
 </div>
+
 <script>
-document.querySelector("form").addEventListener("submit", function(){
+document.getElementById("downloadForm").addEventListener("submit", function(){
     document.getElementById("resume_html").value =
         document.querySelector(".resume").outerHTML;
 });
 </script>
+
 </body>
 </html>

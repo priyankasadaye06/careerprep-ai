@@ -27,6 +27,7 @@
     {% endif %}
 
     <!-- EXPERIENCE -->
+    {% if experience %}
     <section>
         <h2>EXPERIENCE</h2>
 
@@ -43,20 +44,18 @@
 
             <ul>
                 {% for point in exp.points %}
-                <li>{{ point }}</li>
+                    {% if point %}
+                    <li>{{ point }}</li>
+                    {% endif %}
                 {% endfor %}
-
-                {% if role_bullets %}
-                    {% for rb in role_bullets %}
-                        <li>{{ rb }}</li>
-                    {% endfor %}
-                {% endif %}
             </ul>
         </div>
         {% endfor %}
     </section>
+    {% endif %}
 
     <!-- EDUCATION -->
+    {% if education %}
     <section>
         <h2>EDUCATION</h2>
         {% for edu in education %}
@@ -66,47 +65,53 @@
         </p>
         {% endfor %}
     </section>
+    {% endif %}
 
     <!-- SKILLS -->
+    {% if skills %}
     <section>
         <h2>SKILLS</h2>
-        <p><strong>Languages:</strong> {{ skills.languages | join(", ") }}</p>
-        <p><strong>Frameworks:</strong> {{ skills.frameworks | join(", ") }}</p>
-        <p><strong>Tools:</strong> {{ skills.tools | join(", ") }}</p>
-        <p><strong>Databases:</strong> {{ skills.databases | join(", ") }}</p>
-    </section>
 
-         {% if projects %}
+        {% if skills.languages %}
+        <p><strong>Languages:</strong> {{ skills.languages | join(", ") }}</p>
+        {% endif %}
+
+        {% if skills.frameworks %}
+        <p><strong>Frameworks:</strong> {{ skills.frameworks | join(", ") }}</p>
+        {% endif %}
+
+        {% if skills.tools %}
+        <p><strong>Tools:</strong> {{ skills.tools | join(", ") }}</p>
+        {% endif %}
+
+        {% if skills.databases %}
+        <p><strong>Databases:</strong> {{ skills.databases | join(", ") }}</p>
+        {% endif %}
+
+    </section>
+    {% endif %}
+
+    <!-- PROJECTS -->
+    {% if projects %}
     <section>
         <h2>PROJECTS</h2>
-        <ul>    
+        <ul>
             {% for p in projects %}
                 <li>{{ p }}</li>
             {% endfor %}
         </ul>
     </section>
     {% endif %}
-    
-    <!-- ROLE HIGHLIGHTS -->
-    {% if role_bullets %}
-    <section>
-        <h2>ROLE HIGHLIGHTS</h2>
-        <ul>
-            {% for bullet in role_bullets %}
-                <li>{{ bullet }}</li>
-            {% endfor %}
-        </ul>
-    </section>
-    {% endif %}
 
-    <!-- 🔥 ROLE SECTION (NEW DYNAMIC PART) -->
-    {% if role_section %}
+    <!-- 🔥 CUSTOM SECTIONS (REPLACES ROLE SYSTEM) -->
+    {% if custom_sections %}
     <section>
-        <h2>{{ role }} Details</h2>
+        <h2>ADDITIONAL INFORMATION</h2>
         <ul>
-            {% for key, value in role_section.items() %}
+            {% for key, value in custom_sections.items() %}
             <li>
-                <strong>{{ key.replace("_"," ").title() }}:</strong>
+                <strong>{{ key }}:</strong> 
+                <br>
                 {{ value }}
             </li>
             {% endfor %}
