@@ -1,6 +1,112 @@
-<h2>Upload Resume for Interview Training</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Resume</title>
 
-<form action="/upload-resume" method="POST" enctype="multipart/form-data">
-    <input type="file" name="resume">
-    <button type="submit">Upload Resume</button>
-</form>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #2d6cdf, #6ea8fe);
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            padding: 40px;
+            border-radius: 18px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 14px;
+            color: #e0e6ff;
+            margin-bottom: 25px;
+        }
+
+        .upload-box {
+            border: 2px dashed white;
+            padding: 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: 0.3s;
+        }
+
+        .upload-box:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: white;
+            color: #2d6cdf;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #dfe7ff;
+        }
+
+        #fileName {
+            font-size: 13px;
+            margin-bottom: 10px;
+            color: #d0d8ff;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>📄 Upload Resume</h2>
+    <p>Select your resume to start interview training</p>
+
+    <form action="/upload-resume" method="POST" enctype="multipart/form-data">
+
+        <label class="upload-box">
+            Click to choose file
+            <input type="file" name="resume" id="fileInput" required>
+        </label>
+
+        <p id="fileName"></p>
+
+        <button type="submit" class="btn">
+            Next →
+        </button>
+    </form>
+</div>
+
+<script>
+    const fileInput = document.getElementById("fileInput");
+    const fileName = document.getElementById("fileName");
+
+    fileInput.addEventListener("change", function() {
+        if (this.files.length > 0) {
+            fileName.innerText = "Selected: " + this.files[0].name;
+        }
+    });
+</script>
+
+</body>
+</html>

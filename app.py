@@ -4,7 +4,7 @@ import os
 from flask import Flask, render_template, request, session, redirect, make_response, jsonify
 
 from logic.template_parser import extract_template_fields
-from logic.role_fields import ROLE_FIELDS
+
 from logic.ai_chatbot import generate_interview_response
 
 from interview.resume_parser import extract_text_from_pdf, extract_skills_from_resume
@@ -12,12 +12,14 @@ from logic.company_ai import generate_company_questions
 
 from werkzeug.utils import secure_filename
 
-UPLOAD_FOLDER = "static/uploads"
+from flask import redirect, url_for
+
+UPLOAD_FOLDER = os.path.join("static", "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# ---------------- SETUP ----------------
-UPLOAD_FOLDER = "uploads"
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+#UPLOAD_FOLDER = "uploads"
+#os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
 
 app = Flask(__name__)
 app.secret_key = "careerprep_secret"
@@ -102,7 +104,7 @@ def preview():
         filepath = os.path.join(UPLOAD_FOLDER, filename)
         photo.save(filepath)
 
-        data["photo"] = "/" + filepath   # important for HTML
+        data["photo"] = f"/static/uploads/{filename}"   # important for HTML
     else:
         data["photo"] = None
 
@@ -218,6 +220,13 @@ def upload_resume():
     session["skills"] = skills
     session["chat_history"] = []
 
+    print("Redirecting to interview options...")
+
+    return redirect(url_for("interview_options"))
+
+
+@app.route("/interview-options")
+def interview_options():
     return render_template("interview_options.html")
 
 # ---------------- CHAT ----------------

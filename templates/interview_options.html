@@ -5,33 +5,48 @@
 
     <style>
         body {
-            font-family: Arial;
-            background: linear-gradient(to right, #eef2f3, #dfe9f3);
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #2d6cdf, #6ea8fe);
+            margin: 0;
+            color: white;
             text-align: center;
         }
 
         h1 {
-            margin-top: 40px;
+            margin-top: 50px;
+            font-size: 32px;
+        }
+
+        p.subtitle {
+            color: #e0e6ff;
+            margin-bottom: 40px;
         }
 
         .container {
             display: flex;
             justify-content: center;
-            gap: 40px;
-            margin-top: 60px;
+            gap: 30px;
+            flex-wrap: wrap;
+            padding: 20px;
         }
 
         .card {
-            width: 250px;
+            width: 280px;
             padding: 25px;
-            border-radius: 15px;
-            background: white;
-            box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             transition: 0.3s;
         }
 
         .card:hover {
-            transform: scale(1.05);
+            transform: translateY(-8px) scale(1.02);
+        }
+
+        .icon {
+            font-size: 40px;
+            margin-bottom: 10px;
         }
 
         .card h3 {
@@ -40,21 +55,30 @@
 
         .card p {
             font-size: 14px;
-            color: gray;
+            color: #f0f3ff;
         }
 
         .btn {
             margin-top: 15px;
-            padding: 10px 20px;
+            padding: 12px 20px;
             border: none;
-            background: #007bff;
-            color: white;
-            border-radius: 8px;
+            background: white;
+            color: #2d6cdf;
+            border-radius: 10px;
             cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            width: 100%;
         }
 
         .btn:hover {
-            background: #0056b3;
+            background: #dfe7ff;
+        }
+
+        footer {
+            margin-top: 40px;
+            font-size: 13px;
+            color: #d0d8ff;
         }
     </style>
 </head>
@@ -62,42 +86,48 @@
 <body>
 
 <h1>🚀 AI Interview Dashboard</h1>
-<p>Select your training mode</p>
+<p class="subtitle">Choose your preparation mode</p>
 
 <div class="container">
 
     <!-- 🤖 CHATBOT -->
     <div class="card">
-        <h3>AI Chatbot Interview</h3>
-        <p>Interactive interview with feedback and scoring</p>
+        <div class="icon">🤖</div>
+        <h3>AI Chatbot</h3>
+        <p>Interactive interview with real-time feedback</p>
 
         <form action="/chatbot">
-            <button class="btn">Start</button>
+            <button class="btn">Start Interview</button>
         </form>
     </div>
 
     <!-- 🏢 COMPANY MODE -->
     <div class="card">
-        <h3>Company-Based Training</h3>
-        <p>Practice questions from top tech companies</p>
+        <div class="icon">🏢</div>
+        <h3>Company Practice</h3>
+        <p>Prepare with real company-specific questions</p>
 
         <form action="/company-fyq">
-            <button class="btn">Start</button>
+            <button class="btn">Explore Questions</button>
         </form>
     </div>
 
     <!-- 🧪 MOCK TEST -->
     <div class="card">
+        <div class="icon">🧪</div>
         <h3>Mock Test</h3>
-        <p>Take full-length test from external platform</p>
+        <p>Take full-length coding tests</p>
 
-        <!-- Replace with real link -->
         <a href="https://www.hackerrank.com" target="_blank">
-            <button class="btn">Start</button>
+            <button class="btn">Start Test</button>
         </a>
     </div>
 
 </div>
+
+<footer>
+    Built with ❤️ for your placements
+</footer>
 
 </body>
 </html>

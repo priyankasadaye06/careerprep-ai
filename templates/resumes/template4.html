@@ -9,7 +9,13 @@
 <div class="resume">
 
 <main>
-    <h1>{{ name }}</h1>
+    <div class="header">
+        <h1>{{ name }}</h1>
+
+        {% if photo %}
+        <img src="{{ photo }}" class="profile-pic">
+        {% endif %}
+    </div>
 
     <!-- SUMMARY -->
     {% if summary %}
