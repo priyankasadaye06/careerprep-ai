@@ -289,30 +289,81 @@ def chatbot():
 def company_page():
     return render_template("company_select.html")
 
+
 @app.route("/get-company-questions", methods=["POST"])
 def get_company_questions():
 
     company = request.form.get("company")
     level = request.form.get("level")
+
     resume_text = session.get("resume_text", "")
     skills = session.get("skills", [])
 
-    # 🔥 Generate questions
+    # 🚨 Safety fallback
+    if not resume_text:
+        resume_text = "No resume data provided."
+
+    # 🔥 Generate AI Questions (IMPORTANT: pass company properly)
     questions = generate_company_questions(
-        resume_text + f"\nDifficulty: {level}",
+        f"""
+        Generate interview questions for {company}.
+
+        Candidate Resume:
+        {resume_text}
+
+        Skills: {skills}
+
+        Difficulty: {level}
+
+        Instructions:
+        - Give 5 to 8 interview questions
+        - Focus on skills mentioned in resume
+        - Mix technical + HR questions
+        - Return only questions (no extra text)
+        """,
         company
     )
 
-    # 🔥 Dummy skill matching (you can improve later)
-    company_skills = ["DSA", "System Design", "Python", "DBMS"]
+    # ---------------- CLEAN QUESTIONS ----------------
+    if isinstance(questions, dict):
+        questions = questions.get("questions", [])
 
-    matched = [s for s in skills if s in company_skills]
-    missing = [s for s in company_skills if s not in skills]
+    if isinstance(questions, str):
+        questions = questions.split("\n")
+
+    # Remove empty / junk lines
+    questions = [q.strip(" -•1234567890.") for q in questions if q.strip()]
+
+    # Fallback if AI fails
+    if not questions:
+        questions = [
+            f"What projects have you done related to {company}?",
+            "Explain your strongest technical skill.",
+            "What challenges did you face in your project?",
+            "Difference between SQL and NoSQL?",
+            "Tell me about yourself."
+        ]
+
+    # ---------------- SKILL ANALYSIS ----------------
+    # 🔥 Better company skill mapping
+    COMPANY_SKILLS_MAP = {
+        "Google": ["DSA", "System Design", "Algorithms", "Problem Solving"],
+        "Amazon": ["DSA", "System Design", "Leadership Principles"],
+        "Microsoft": ["OOP", "DBMS", "System Design"],
+        "TCS": ["Java", "SQL", "Aptitude"],
+        "Infosys": ["Python", "DBMS", "Networking"]
+    }
+
+    company_skills = COMPANY_SKILLS_MAP.get(company, ["Python", "DBMS", "OOP"])
+
+    matched = [s for s in skills if s.lower() in [c.lower() for c in company_skills]]
+    missing = [c for c in company_skills if c.lower() not in [s.lower() for s in skills]]
 
     score = int((len(matched) / len(company_skills)) * 100) if company_skills else 0
 
-    suggestions = [f"Learn {s}" for s in missing]
+    suggestions = [f"Improve {s}" for s in missing]
 
+    # ---------------- FINAL RESULT ----------------
     result = {
         "company": company,
         "score": score,
@@ -321,6 +372,11 @@ def get_company_questions():
         "suggestions": suggestions,
         "questions": questions
     }
+
+    # 🔍 Debug
+    print("COMPANY:", company)
+    print("SKILLS:", skills)
+    print("QUESTIONS:", questions)
 
     return render_template("company_questions.html", result=result)
 

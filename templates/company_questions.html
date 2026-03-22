@@ -126,11 +126,10 @@
     <div class="card">
         <h3 class="section-title">📌 Interview Questions</h3>
        <ul>
-            {% for q in result.questions.split('\n') %}
-                {% if q %}
+            {% for q in result.questions %}
                 <li>{{ q }}</li>
-                {% endif %}
             {% endfor %}
+                
         </ul>
     </div>
 
