@@ -10,6 +10,11 @@ from logic.ai_chatbot import generate_interview_response
 from interview.resume_parser import extract_text_from_pdf, extract_skills_from_resume
 from logic.company_ai import generate_company_questions
 
+from werkzeug.utils import secure_filename
+
+UPLOAD_FOLDER = "static/uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
 # ---------------- SETUP ----------------
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -89,6 +94,17 @@ def preview():
     data = process_form_data(request.form)
 
     template = session.get("template")
+   
+    photo = request.files.get("photo")
+
+    if photo and photo.filename != "":
+        filename = secure_filename(photo.filename)
+        filepath = os.path.join(UPLOAD_FOLDER, filename)
+        photo.save(filepath)
+
+        data["photo"] = "/" + filepath   # important for HTML
+    else:
+        data["photo"] = None
 
     # 🔥 CUSTOM SECTIONS
     custom_sections = {}
