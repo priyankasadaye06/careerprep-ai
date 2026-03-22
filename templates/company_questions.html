@@ -125,9 +125,13 @@
     <!-- QUESTIONS -->
     <div class="card">
         <h3 class="section-title">📌 Interview Questions</h3>
-        <div class="questions">
-            {{ result.questions }}
-        </div>
+       <ul>
+            {% for q in result.questions.split('\n') %}
+                {% if q %}
+                <li>{{ q }}</li>
+                {% endif %}
+            {% endfor %}
+        </ul>
     </div>
 
     <!-- BACK BUTTON -->

@@ -295,17 +295,34 @@ def get_company_questions():
     company = request.form.get("company")
     level = request.form.get("level")
     resume_text = session.get("resume_text", "")
+    skills = session.get("skills", [])
 
+    # 🔥 Generate questions
     questions = generate_company_questions(
         resume_text + f"\nDifficulty: {level}",
         company
     )
 
-    return render_template(
-        "company_questions.html",
-        company=company,
-        questions=questions
-    )
+    # 🔥 Dummy skill matching (you can improve later)
+    company_skills = ["DSA", "System Design", "Python", "DBMS"]
+
+    matched = [s for s in skills if s in company_skills]
+    missing = [s for s in company_skills if s not in skills]
+
+    score = int((len(matched) / len(company_skills)) * 100) if company_skills else 0
+
+    suggestions = [f"Learn {s}" for s in missing]
+
+    result = {
+        "company": company,
+        "score": score,
+        "matched_skills": matched,
+        "missing_skills": missing,
+        "suggestions": suggestions,
+        "questions": questions
+    }
+
+    return render_template("company_questions.html", result=result)
 
 # ---------------- RUN ----------------
 if __name__ == "__main__":

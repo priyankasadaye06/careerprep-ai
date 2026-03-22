@@ -1,23 +1,74 @@
-<h2>Select Company & Difficulty</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Company Practice</title>
 
-<form action="/get-company-questions" method="POST">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #2d6cdf, #6ea8fe);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+        }
 
-    <select name="company">
-        <option>Google</option>
-        <option>Amazon</option>
-        <option>Microsoft</option>
-    </select>
+        .card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            width: 350px;
+            text-align: center;
+        }
 
-    <br><br>
+        select, button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            border-radius: 8px;
+            border: none;
+        }
 
-    <select name="level">
-        <option value="easy">Easy</option>
-        <option value="medium">Medium</option>
-        <option value="hard">Hard</option>
-    </select>
+        button {
+            background: white;
+            color: #2d6cdf;
+            font-weight: bold;
+            cursor: pointer;
+        }
 
-    <br><br>
+        button:hover {
+            background: #dfe7ff;
+        }
+    </style>
+</head>
 
-    <button type="submit">Generate Questions</button>
+<body>
 
-</form>
+<div class="card">
+    <h2>🏢 Company Practice</h2>
+
+    <form action="/get-company-questions" method="POST">
+
+        <select name="company" required>
+            <option value="">Select Company</option>
+            <option>Google</option>
+            <option>Amazon</option>
+            <option>Microsoft</option>
+            <option>Infosys</option>
+            <option>TCS</option>
+        </select>
+
+        <select name="level">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+        </select>
+
+        <button type="submit">Generate Questions</button>
+    </form>
+</div>
+
+</body>
+</html>
