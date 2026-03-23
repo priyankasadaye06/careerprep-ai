@@ -17,8 +17,6 @@ from flask import redirect, url_for
 UPLOAD_FOLDER = os.path.join("static", "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-#UPLOAD_FOLDER = "uploads"
-#os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
 app = Flask(__name__)
