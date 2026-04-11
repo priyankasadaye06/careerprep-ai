@@ -1,39 +1,74 @@
-body { font-family: Arial; background:#eee; }
-.resume { width:950px; margin:auto; display:flex; background:white; }
-
-aside {
-    width:30%;
-    background:#2f3b4f;
-    color:white;
-    padding:25px;
+body {
+    font-family: Arial;
+    background: #eee;
+    margin: 0;
 }
 
-main { width:70%; padding:25px; }
-
-.timeline {
-    border-left:3px solid #ccc;
-    padding-left:15px;
-    margin-bottom:20px;
+/* MAIN CONTAINER */
+.resume {
+    width: 950px;
+    margin: auto;
+    background: white;
+    overflow: hidden;   /* important */
 }
 
+/* SIDEBAR */
 aside {
+    width: 30%;
+    float: left;   /* ✅ instead of flex */
     background: #2d6cdf;
     color: white;
     padding: 20px;
+    box-sizing: border-box;
+    min-height: 1000px;   /* ✅ fixes height issue */
     text-align: center;
 }
 
+/* MAIN CONTENT */
+main {
+    width: 70%;
+    float: left;   /* ✅ instead of flex */
+    padding: 25px;
+    box-sizing: border-box;
+}
+
+/* CLEAR FLOAT */
+.resume::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+/* TIMELINE */
+.timeline {
+    border-left: 3px solid #ccc;
+    padding-left: 15px;
+    margin-bottom: 20px;
+}
+
+/* REMOVE IMAGE STYLES (since photo removed) */
 .photo-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 15px;
+    display: none;
 }
 
 .profile-pic {
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid white;
-    background: white;
+    display: none;
+}
+
+/* PDF FIXES */
+@page {
+    margin: 10mm;
+}
+
+body {
+    width: 1000px;
+    margin: auto;
+}
+
+h1, h2, h3 {
+    margin-top: 10px;
+}
+
+p {
+    margin: 5px 0;
 }

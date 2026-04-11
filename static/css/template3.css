@@ -1,28 +1,68 @@
-body { font-family: Arial; background:#f4f6f8; }
-.resume { width:900px; margin:auto; background:white; }
+body {
+    font-family: Arial;
+    background: #f4f6f8;
+    margin: 0;
+}
 
+/* MAIN RESUME */
+.resume {
+    width: 900px;
+    margin: auto;
+    background: white;
+    overflow: hidden;   /* important */
+}
+
+/* HEADER */
 header {
-    background:#1f3a5f;
-    color:white;
-    padding:20px;
+    background: #1f3a5f;
+    color: white;
+    padding: 20px;
 }
 
-.container { display:flex; }
+/* CONTAINER FIX (NO FLEX) */
+.container {
+    width: 100%;
+}
 
+/* SIDEBAR */
 aside {
-    width:30%;
-    background:#eef2f7;
-    padding:20px;
+    width: 30%;
+    float: left;   /* ✅ instead of flex */
+    background: #eef2f7;
+    padding: 20px;
+    box-sizing: border-box;
+    min-height: 1000px;   /* important for PDF */
 }
 
+/* MAIN CONTENT */
 main {
-    width:70%;
-    padding:20px;
+    width: 70%;
+    float: left;   /* ✅ instead of flex */
+    padding: 20px;
+    box-sizing: border-box;
 }
 
+/* CLEAR FLOAT */
+.container::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+/* HEADINGS */
 h2 {
-    background:#1f3a5f;
-    color:white;
-    padding:6px;
-    font-size:14px;
+    background: #1f3a5f;
+    color: white;
+    padding: 6px;
+    font-size: 14px;
+}
+
+/* PDF SETTINGS */
+@page {
+    margin: 10mm;
+}
+
+body {
+    width: 950px;
+    margin: auto;
 }

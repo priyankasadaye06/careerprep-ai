@@ -39,13 +39,6 @@
         margin-bottom: 15px;
         border-radius: 8px;
         border: 1px solid #ddd;
-        transition: 0.3s;
-    }
-
-    input:focus, textarea:focus {
-        border-color: #2d6cdf;
-        outline: none;
-        box-shadow: 0 0 5px rgba(45,108,223,0.2);
     }
 
     .row {
@@ -65,144 +58,77 @@
         border-radius: 8px;
         cursor: pointer;
         font-size: 15px;
-        transition: 0.3s;
     }
 
     button:hover {
         background: #1b4fbf;
     }
-
-    .add-btn {
-        background: #28a745;
-    }
-
-    .add-btn:hover {
-        background: #1e7e34;
-    }
-
-    aside {
-    color: white;
-    padding: 20px;
-    text-align: center;
-}
-
-.photo-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 15px;
-}
-
-.profile-pic {
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid white;
-    background: white;
-}
-
-.profile-pic {
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    transition: 0.3s;
-}
-
-.profile-pic:hover {
-    transform: scale(1.05);
-}
-</style>
+    </style>
 </head>
 <body>
 
+<div class="container">
+
 <h1>Fill Your Resume (Template 5)</h1>
 
-<form method="POST" action="/preview" enctype="multipart/form-data">
+<form method="POST" action="/preview">
 
     <!-- BASIC INFO -->
-    <div class="section">
-        <h2>Basic Info</h2>
-        <input type="text" name="name" placeholder="Full Name" required>
-        <input type="text" name="location" placeholder="Location">
-        <input type="email" name="email" placeholder="Email">
-        <input type="text" name="phone" placeholder="Phone">
-        <input type="text" name="linkedin" placeholder="LinkedIn URL">
-        <input type="text" name="github" placeholder="GitHub URL">
-        <h2>📷 Profile Photo</h2>
-        <input type="file" name="photo" accept="image/*">
-    </div>
-
-    <aside>
-
-    <!-- PROFILE PHOTO -->
-    {% if photo %}
-    <div class="photo-container">
-        <img src="{{ photo }}" class="profile-pic">
-    </div>
-    {% endif %}
-
-    <h1>{{ name }}</h1>
+    <h2>Basic Info</h2>
+    <input type="text" name="name" placeholder="Full Name" required>
+    <input type="text" name="location" placeholder="Location">
+    <input type="email" name="email" placeholder="Email">
+    <input type="text" name="phone" placeholder="Phone">
+    <input type="text" name="linkedin" placeholder="LinkedIn URL">
+    <input type="text" name="github" placeholder="GitHub URL">
 
     <!-- SUMMARY -->
-    <div class="section">
-        <h2>Summary</h2>
-        <textarea name="summary" placeholder="Write summary..."></textarea>
-    </div>
+    <h2>Summary</h2>
+    <textarea name="summary" placeholder="Write summary..."></textarea>
 
     <!-- EXPERIENCE -->
-    <div class="section">
-        <h2>Experience</h2>
-
-        <input type="text" name="exp_role_1" placeholder="Role">
-        <input type="text" name="exp_company_1" placeholder="Company">
-        <input type="text" name="exp_duration_1" placeholder="Duration">
-        <input type="text" name="exp_location_1" placeholder="Location">
-
-        <textarea name="exp_points_1" placeholder="Enter points (one per line)"></textarea>
-    </div>
+    <h2>Experience</h2>
+    <input type="text" name="exp_role_1" placeholder="Role">
+    <input type="text" name="exp_company_1" placeholder="Company">
+    <input type="text" name="exp_duration_1" placeholder="Duration">
+    <input type="text" name="exp_location_1" placeholder="Location">
+    <textarea name="exp_points_1" placeholder="Enter points (one per line)"></textarea>
 
     <!-- PROJECTS -->
-    <div class="section">
-        <h2>Projects</h2>
-        <textarea name="projects" placeholder="One project per line"></textarea>
-    </div>
+    <h2>Projects</h2>
+    <textarea name="projects" placeholder="One project per line"></textarea>
 
     <!-- EDUCATION -->
-    <div class="section">
-        <h2>Education</h2>
-
-        <input type="text" name="edu_degree_1" placeholder="Degree">
-        <input type="text" name="edu_college_1" placeholder="College">
-        <input type="text" name="edu_year_1" placeholder="Year">
-    </div>
+    <h2>Education</h2>
+    <input type="text" name="edu_degree_1" placeholder="Degree">
+    <input type="text" name="edu_college_1" placeholder="College">
+    <input type="text" name="edu_year_1" placeholder="Year">
 
     <!-- SKILLS -->
-    <div class="section">
-        <h2>Skills</h2>
+    <h2>Skills</h2>
+    <input type="text" name="skills_languages" placeholder="Languages (comma separated)">
+    <input type="text" name="skills_frameworks" placeholder="Frameworks">
+    <input type="text" name="skills_tools" placeholder="Tools">
+    <input type="text" name="skills_databases" placeholder="Databases">
 
-        <input type="text" name="skills_languages" placeholder="Languages (comma separated)">
-        <input type="text" name="skills_frameworks" placeholder="Frameworks">
-        <input type="text" name="skills_tools" placeholder="Tools">
-        <input type="text" name="skills_databases" placeholder="Databases">
-    </div>
+    <!-- CUSTOM SECTIONS -->
+    <h2>Custom Sections</h2>
 
-    <!-- 🔥 CUSTOM SECTIONS -->
-    <div class="section">
-        <h2>Custom Sections (Optional)</h2>
-
-        <div id="custom-fields">
-
-            <div class="row">
-                <input type="text" name="custom_key_1" placeholder="Section Title (e.g. Achievements)">
-                <textarea name="custom_value_1" placeholder="Content (one per line)"></textarea>
-            </div>
-
+    <div id="custom-fields">
+        <div class="row">
+            <input type="text" name="custom_key_1" placeholder="Section Title">
+            <textarea name="custom_value_1" placeholder="Content (one per line)"></textarea>
         </div>
-
-        <button type="button" onclick="addCustomField()">+ Add More Section</button>
     </div>
 
+    <button type="button" onclick="addCustomField()">+ Add More Section</button>
+
+    <br><br>
     <button type="submit">Generate Resume</button>
 
 </form>
+
+</div>
 
 <script>
 let count = 1;

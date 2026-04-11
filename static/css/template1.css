@@ -2,29 +2,35 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     background: #ffffff;
     color: #000;
+    margin: 0;
 }
 
+/* MAIN CONTAINER */
 .resume {
     width: 850px;
     margin: 30px auto;
 }
 
+/* NAME */
 .name {
     text-align: center;
     font-size: 30px;
     font-weight: bold;
 }
 
+/* CONTACT */
 .contact {
     text-align: center;
     font-size: 13px;
     margin-bottom: 20px;
 }
 
+/* SECTION */
 section {
     margin-top: 20px;
 }
 
+/* HEADINGS */
 h2 {
     font-size: 15px;
     border-bottom: 1px solid #000;
@@ -33,20 +39,37 @@ h2 {
     letter-spacing: 1px;
 }
 
+/* BLOCK */
 .block {
     margin-bottom: 15px;
 }
 
+/* ROW FIX (NO FLEX) */
 .row {
-    display: flex;
-    justify-content: space-between;
+    width: 100%;
+    overflow: hidden;   /* important */
     font-size: 14px;
 }
 
-.right {
+/* LEFT SIDE TEXT */
+.row .left {
+    float: left;
+}
+
+/* RIGHT SIDE TEXT */
+.row .right {
+    float: right;
     font-size: 13px;
 }
 
+/* CLEAR FLOAT (IMPORTANT) */
+.row::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+/* LIST */
 ul {
     margin-top: 5px;
     padding-left: 18px;
@@ -57,12 +80,24 @@ li {
     font-size: 13px;
 }
 
+/* PARAGRAPH */
 p {
     font-size: 13px;
     margin: 5px 0;
 }
 
+/* LINKS */
 a {
     color: black;
     text-decoration: none;
+}
+
+/* PDF SETTINGS */
+@page {
+    margin: 10mm;
+}
+
+body {
+    width: 900px;
+    margin: auto;
 }

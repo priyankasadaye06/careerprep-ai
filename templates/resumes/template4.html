@@ -11,10 +11,6 @@
 <main>
     <div class="header">
         <h1>{{ name }}</h1>
-
-        {% if photo %}
-        <img src="{{ photo }}" class="profile-pic">
-        {% endif %}
     </div>
 
     <!-- SUMMARY -->
@@ -101,7 +97,7 @@
     </section>
     {% endif %}
 
-    <!-- 🔥 CUSTOM SECTIONS -->
+    <!-- CUSTOM SECTIONS -->
     {% if custom_sections %}
     <section>
         <h2>ADDITIONAL INFORMATION</h2>

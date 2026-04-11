@@ -183,16 +183,28 @@ def preview():
 @app.route("/download-resume", methods=["POST"])
 def download_resume():
 
+    template = session.get("template")
+
+    # ✅ GET HTML FROM FORM 
     html = request.form.get("resume_html")
 
-    pdf = pdfkit.from_string(html, False, configuration=config)
-
+    pdf = pdfkit.from_string(
+        html,
+        False,
+        configuration=config,
+        options={
+            'enable-local-file-access': None,
+            'page-size': 'A4',
+            'encoding': "UTF-8",
+            'quiet': ''
+        },
+        css=f"static/css/{template}.css"
+    )
     response = make_response(pdf)
     response.headers["Content-Type"] = "application/pdf"
     response.headers["Content-Disposition"] = "attachment; filename=resume.pdf"
 
     return response
-
 # ---------------- INTERVIEW HOME ----------------
 @app.route("/interview")
 def interview_training():

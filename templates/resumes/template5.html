@@ -15,11 +15,18 @@
     <!-- CONTACT -->
     <section>
         <h2>CONTACT</h2>
-        <p>{{ phone }}</p>
-        <p>{{ email }}</p>
-        <p>{{ location }}</p>
-        <p><a href="{{ linkedin }}">LinkedIn</a></p>
-        <p><a href="{{ github }}">GitHub</a></p>
+
+        {% if phone %}<p>{{ phone }}</p>{% endif %}
+        {% if email %}<p>{{ email }}</p>{% endif %}
+        {% if location %}<p>{{ location }}</p>{% endif %}
+
+        {% if linkedin %}
+        <p><a href="{{ linkedin }}" target="_blank">LinkedIn</a></p>
+        {% endif %}
+
+        {% if github %}
+        <p><a href="{{ github }}" target="_blank">GitHub</a></p>
+        {% endif %}
     </section>
 
     <!-- SKILLS -->
@@ -81,11 +88,16 @@
     {% if experience %}
     <section>
         <h2>EXPERIENCE</h2>
+
         {% for exp in experience %}
         <div class="timeline">
             <span>{{ exp.duration }}</span>
             <h4>{{ exp.role }}</h4>
-            <p><strong>{{ exp.company }}</strong></p>
+
+            <p>
+                <strong>{{ exp.company }}</strong>
+                {% if exp.location %} | {{ exp.location }}{% endif %}
+            </p>
 
             <ul>
                 {% for p in exp.points %}
@@ -96,6 +108,7 @@
             </ul>
         </div>
         {% endfor %}
+
     </section>
     {% endif %}
 
@@ -111,7 +124,7 @@
     </section>
     {% endif %}
 
-    <!-- 🔥 CUSTOM SECTIONS -->
+    <!-- CUSTOM SECTIONS -->
     {% if custom_sections %}
     <section>
         <h2>ADDITIONAL INFORMATION</h2>
@@ -134,7 +147,7 @@
 
 </main>
 
-</div>  <!-- resume div ends -->
+</div>
 
 <!-- DOWNLOAD BUTTON -->
 <div style="text-align:center; margin-top:30px;">
