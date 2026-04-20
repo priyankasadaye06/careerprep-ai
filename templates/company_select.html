@@ -51,23 +51,24 @@
 
     <form action="/get-company-questions" method="POST">
 
-        <select name="company" required>
-            <option value="">Select Company</option>
-            <option>Google</option>
-            <option>Amazon</option>
-            <option>Microsoft</option>
-            <option>Infosys</option>
-            <option>TCS</option>
-        </select>
+    <select name="company">
+        <option>Google</option>
+        <option>Amazon</option>
+        <option>Microsoft</option>
+        <option>TCS</option>
+        <option>Infosys</option>
+    </select>
 
-        <select name="level">
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-        </select>
+    <select name="level">
+        <option value="all">All Levels</option>
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+    </select>
 
-        <button type="submit">Generate Questions</button>
-    </form>
+    <button type="submit">Get Questions</button>
+
+</form>
 </div>
 
 </body>

@@ -6,116 +6,139 @@
 
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            margin: 0;
-            padding: 0;
-        }
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
 
-        .container {
-            width: 80%;
-            margin: 30px auto;
-        }
+/* CONTAINER */
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+}
 
-        h1 {
-            text-align: center;
-            color: #333;
-        }
+/* TITLE */
+.title {
+    text-align: center;
+    color: white;
+    margin-bottom: 30px;
+}
 
-        .card {
-            background: white;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
+/* CARD */
+.card {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
 
-        .score {
-            font-size: 22px;
-            font-weight: bold;
-            color: #2ecc71;
-        }
+.card:hover {
+    transform: translateY(-3px);
+}
 
-        .section-title {
-            margin-top: 10px;
-            color: #444;
-        }
+/* SCORE CARD */
+.score-card {
+    text-align: center;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    color: white;
+}
 
-        ul {
-            padding-left: 20px;
-        }
+.score-card h2 {
+    font-size: 40px;
+    margin: 10px 0;
+}
 
-        li {
-            margin-bottom: 6px;
-        }
+/* SECTION TITLE */
+.section-title {
+    margin-bottom: 10px;
+    color: #4a6cf7;
+}
 
-        .missing {
-            color: #e74c3c;
-        }
+/* BADGES */
+.skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
 
-        .matched {
-            color: #27ae60;
-        }
+.badge {
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    background: #eee;
+}
 
-        .questions {
-            white-space: pre-wrap;
-            background: #f9f9f9;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-        }
+.matched {
+    background: #4caf50;
+    color: white;
+}
 
-        .btn {
-            display: inline-block;
-            padding: 10px 15px;
-            background: #3498db;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            margin-top: 10px;
-        }
+/* LIST */
+.list {
+    padding-left: 20px;
+}
 
-        .btn:hover {
-            background: #2980b9;
-        }
+.list li {
+    margin: 6px 0;
+}
 
+/* QUESTIONS */
+.questions li {
+    margin-bottom: 10px;
+    padding: 8px;
+    background: #f5f7fb;
+    border-radius: 8px;
+}
+
+/* BUTTON */
+.btn {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    background: #4a6cf7;
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: #3a55d1;
+}
     </style>
 </head>
 <body>
 
 <div class="container">
 
-    <h1>{{ result.company }} Interview Preparation</h1>
+    <h1 class="title">{{ result.company }} Interview Preparation</h1>
 
     <!-- SCORE -->
-    <div class="card">
-        <p class="score">Match Score: {{ result.score }}%</p>
+    <div class="card score-card">
+        <p>Match Score</p>
+        <h2>{{ result.score }}%</h2>
     </div>
 
     <!-- MATCHED SKILLS -->
     <div class="card">
         <h3 class="section-title">✅ Matched Skills</h3>
-        <ul>
+        <div class="skills">
             {% for skill in result.matched_skills %}
-                <li class="matched">{{ skill }}</li>
+                <span class="badge matched">{{ skill }}</span>
             {% endfor %}
-        </ul>
-    </div>
-
-    <!-- MISSING SKILLS -->
-    <div class="card">
-        <h3 class="section-title">❌ Missing Skills</h3>
-        <ul>
-            {% for skill in result.missing_skills %}
-                <li class="missing">{{ skill }}</li>
-            {% endfor %}
-        </ul>
+        </div>
     </div>
 
     <!-- SUGGESTIONS -->
     <div class="card">
         <h3 class="section-title">💡 Suggestions</h3>
-        <ul>
+        <ul class="list">
             {% for suggestion in result.suggestions %}
                 <li>{{ suggestion }}</li>
             {% endfor %}
@@ -125,11 +148,10 @@
     <!-- QUESTIONS -->
     <div class="card">
         <h3 class="section-title">📌 Interview Questions</h3>
-       <ul>
+        <ul class="list questions">
             {% for q in result.questions %}
                 <li>{{ q }}</li>
             {% endfor %}
-                
         </ul>
     </div>
 
