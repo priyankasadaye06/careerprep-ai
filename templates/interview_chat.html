@@ -134,8 +134,8 @@ function addMessage(text, className) {
     div.className = "msg " + className;
 
     if (className === "ai") {
-        // Format AI output nicely
         let formatted = text
+            .replace(/\n/g, "<br>")
             .replace(/Score:\s*(\d+\/10)/gi, '<br><span class="score">Score: $1</span>')
             .replace(/Feedback:/gi, '<br><b>Feedback:</b>')
             .replace(/Next Question:/gi, '<br><b>Next Question:</b>');
@@ -170,16 +170,18 @@ function removeTyping() {
     if (typing) typing.remove();
 }
 
-// FIRST MESSAGE
+// FIRST MESSAGE (INTERVIEW START)
 window.onload = function() {
-    addMessage("Hello! Let's begin your interview.\nTell me about yourself.", "ai");
+    addMessage(
+        "👋 Welcome to your AI Interview Trainer!\n\nLet's start:\n👉 Tell me about yourself.",
+        "ai"
+    );
 };
 
 // SEND MESSAGE
 async function sendMessage() {
-
     let input = document.getElementById("user_input");
-    let message = input.value;
+    let message = input.value.trim();
 
     if (!message) return;
 
@@ -200,15 +202,20 @@ async function sendMessage() {
         let data = await response.json();
 
         removeTyping();
-        addMessage(data.reply, "ai");
+
+        if (data.reply) {
+            addMessage(data.reply, "ai");
+        } else {
+            addMessage("⚠️ No response from AI", "ai");
+        }
 
     } catch (error) {
         removeTyping();
-        addMessage("⚠️ Error connecting to AI", "ai");
+        addMessage("⚠️ Server error. Check Flask or Ollama.", "ai");
     }
 }
 
-// ENTER KEY
+// ENTER KEY SUPPORT
 document.getElementById("user_input").addEventListener("keypress", function(e) {
     if (e.key === "Enter") {
         sendMessage();
