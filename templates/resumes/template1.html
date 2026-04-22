@@ -162,7 +162,16 @@
 </div>
 <script>
 function getResumeHTML() {
-    return document.querySelector(".resume").outerHTML;
+    return `
+    <html>
+    <head>
+        <link rel="stylesheet" href="/static/css/template1.css">
+    </head>
+    <body>
+        ${document.querySelector(".resume").outerHTML}
+    </body>
+    </html>
+    `;
 }
 
 document.getElementById("downloadForm").addEventListener("submit", function(){

@@ -158,11 +158,11 @@ body {
         {% for r in resumes %}
             <div class="resume-card">
 
-                <b>Template:</b> {{ r["template"] or "Template 1" }} <br>
+                <b>Template:</b> {{ r["template"] or "Template " }} <br>
                 <b>Date:</b> {{ r["created_at"] }} <br>
 
                 <div class="resume-actions">
-                    <a class="preview-btn" onclick="openPreview({{ r['id'] }})">Preview</a>
+                    <a class="preview-btn" href="/view-resume/{{ r['id'] }}" target="_blank">Preview</a>
 
                     <a class="download-btn" href="/download-saved/{{ r['id'] }}">
                         Download
@@ -200,7 +200,25 @@ function openPreview(id) {
     fetch("/view-resume/" + id)
     .then(res => res.text())
     .then(html => {
-        document.getElementById("previewContent").innerHTML = html;
+
+        const preview = document.getElementById("previewContent");
+
+        // Clear old content
+        preview.innerHTML = "";
+
+        // 🔥 Add CSS manually (IMPORTANT)
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = "/static/css/template1.css";  // make sure path is correct
+        preview.appendChild(link);
+
+        // Inject resume HTML
+        const wrapper = document.createElement("div");
+        wrapper.innerHTML = html;
+
+        preview.appendChild(wrapper);
+
+        // Show modal
         document.getElementById("previewModal").style.display = "block";
     });
 }
