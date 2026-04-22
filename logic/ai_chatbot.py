@@ -2,10 +2,18 @@ import requests
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
+# simple fallback question bank
+QUESTION_BANK = [
+    "Tell me about yourself.",
+    "Explain one of your projects in detail.",
+    "What are your strengths?",
+    "Explain a challenge you faced in a project.",
+    "What is your favorite programming language and why?"
+]
+
 
 def generate_interview_response(user_message, resume_text, chat_history):
 
-    # 🔥 SKILL EXTRACTION
     skills_db = [
         "python", "java", "c++", "sql", "flask",
         "machine learning", "data structures",
@@ -16,57 +24,43 @@ def generate_interview_response(user_message, resume_text, chat_history):
     skills = [s for s in skills_db if s in resume_lower]
     skills_text = ", ".join(skills) if skills else "general programming"
 
-    # 🔥 BETTER FIRST MESSAGE CHECK
-    is_first = len([m for m in chat_history if m["role"] == "user"]) <= 1
+    # detect first message
+    user_msgs = [m for m in chat_history if m["role"] == "user"]
+    is_first = len(user_msgs) <= 1
 
-    # 🔥 MEMORY LIMIT
+    # track question index
+    q_index = len(user_msgs)
+
     history_text = ""
     for msg in chat_history[-5:]:
         role = "User" if msg["role"] == "user" else "AI"
         history_text += f"{role}: {msg['content']}\n"
 
-    # 🔥 STRONGER PROMPT (FOR SMALL MODELS)
     base_prompt = f"""
 You are a STRICT technical interviewer.
 
 Candidate Skills: {skills_text}
 
-RULES (VERY IMPORTANT):
+RULES:
 - Ask ONLY ONE question
-- Do NOT ask multiple questions
-- Do NOT explain anything extra
-- Be direct and professional
-- Keep responses short
+- Give SHORT feedback
+- Give score out of 10
+- DO NOT repeat same question
+- Be strict but fair
 
-FORMAT RULES:
 
-If first question:
-→ Only output question
 
-If user answered:
-→ Output EXACTLY in this format:
+FORMAT:
 
 Feedback: <short feedback>
 Score: <number>/10
-
-Next Question:
-<one question only>
-
-NO extra text.
-
+Next Question: <question>
 """
 
     if is_first:
-        prompt = f"""
-{base_prompt}
+        return QUESTION_BANK[0]
 
-Ask ONE basic interview question.
-
-User: {user_message}
-AI:
-"""
-    else:
-        prompt = f"""
+    prompt = f"""
 {base_prompt}
 
 Conversation:
@@ -74,7 +68,8 @@ Conversation:
 
 User Answer:
 {user_message}
-AI:
+
+Generate response.
 """
 
     try:
@@ -90,24 +85,26 @@ AI:
         data = response.json()
         reply = data.get("response", "").strip()
 
-        # 🔥 HARD FORMAT CLEANING
-        if "Feedback:" not in reply and not is_first:
-            reply = f"""Feedback: Answer lacks depth and structure.
-Score: 5/10
+        print("AI RAW RESPONSE:", reply)
+        # ✅ fallback ONLY if completely broken
+        if len(reply.strip()) < 20:
+            next_q = QUESTION_BANK[q_index % len(QUESTION_BANK)]
+
+            reply = f"""Feedback: Good attempt, but improve structure and technical depth.
+Score: 6/10
 
 Next Question:
-Explain one of your projects in detail."""
-
-        if is_first and ("?" not in reply):
-            reply = "Tell me about yourself."
+{next_q}"""
 
         return reply
 
     except Exception as e:
         print("ERROR:", e)
 
-        return """Feedback: System error occurred.
+        next_q = QUESTION_BANK[q_index % len(QUESTION_BANK)]
+
+        return f"""Feedback: System error occurred.
 Score: 5/10
 
 Next Question:
-Explain your strongest technical skill."""
+{next_q}"""
