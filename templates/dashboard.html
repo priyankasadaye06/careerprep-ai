@@ -1,19 +1,222 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Dashboard</title>
+    <title>User Dashboard</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f4f7fb;
+}
+
+/* NAVBAR */
+.navbar {
+    background: #2d6cdf;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* CONTAINER */
+.container {
+    padding: 40px;
+    max-width: 1000px;
+    margin: auto;
+}
+
+/* PROFILE */
+.profile-box {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+}
+
+/* SECTION */
+.resume-section {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+/* CARD */
+.resume-card {
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 15px;
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+    transition: 0.2s;
+}
+
+.resume-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+/* ACTION BUTTONS */
+.resume-actions {
+    margin-top: 10px;
+}
+
+.resume-actions a {
+    margin-right: 10px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Button styles */
+.preview-btn {
+    background: #2d6cdf;
+    color: white;
+}
+
+.download-btn {
+    background: #10b981;
+    color: white;
+}
+
+.delete-btn {
+    background: #ef4444;
+    color: white;
+}
+
+/* EMPTY STATE */
+.empty {
+    text-align: center;
+    color: #777;
+    padding: 20px;
+}
+
+/* MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+    background: white;
+    margin: 4% auto;
+    width: 80%;
+    height: 85%;
+    padding: 20px;
+    overflow: auto;
+    border-radius: 12px;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 22px;
+    cursor: pointer;
+}
+</style>
+
 </head>
 
 <body>
 
-<h1>Welcome, {{ name }} 👋</h1>
+<!-- NAVBAR -->
+<div class="navbar">
+    <h2>SmartHire</h2>
+    <div>👤 {{ name }} | <a href="/logout">Logout</a></div>
+</div>
 
-<a href="/resume">Resume Builder</a><br>
-<a href="/interview">Interview Trainer</a><br>
-<a href="/company-fyq">Company Questions</a><br>
+<div class="container">
 
-<br>
-<a href="/logout">Logout</a>
+<!-- PROFILE -->
+<div class="profile-box">
+    <h1>Welcome, {{ name }}</h1>
+    <p>Manage and preview your saved resumes</p>
+</div>
+
+<!-- RESUME SECTION -->
+<div class="resume-section">
+    <h2>My Resumes</h2>
+
+    {% if resumes %}
+        {% for r in resumes %}
+            <div class="resume-card">
+
+                <b>Template:</b> {{ r["template"] or "Template 1" }} <br>
+                <b>Date:</b> {{ r["created_at"] }} <br>
+
+                <div class="resume-actions">
+                    <a class="preview-btn" onclick="openPreview({{ r['id'] }})">Preview</a>
+
+                    <a class="download-btn" href="/download-saved/{{ r['id'] }}">
+                        Download
+                    </a>
+
+                    <a class="delete-btn"
+                       href="/delete-resume/{{ r['id'] }}"
+                       onclick="return confirm('Delete this resume?')">
+                       Delete
+                    </a>
+                </div>
+
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty">
+            <p>No resumes yet 🚀</p>
+            <p>Create your first resume to see it here.</p>
+        </div>
+    {% endif %}
+</div>
+
+</div>
+
+<!-- MODAL -->
+<div id="previewModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div id="previewContent"></div>
+    </div>
+</div>
+
+<script>
+function openPreview(id) {
+    fetch("/view-resume/" + id)
+    .then(res => res.text())
+    .then(html => {
+        document.getElementById("previewContent").innerHTML = html;
+        document.getElementById("previewModal").style.display = "block";
+    });
+}
+
+function closeModal() {
+    document.getElementById("previewModal").style.display = "none";
+}
+
+/* Close modal on outside click */
+window.onclick = function(event) {
+    let modal = document.getElementById("previewModal");
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+}
+</script>
 
 </body>
 </html>

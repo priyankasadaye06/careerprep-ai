@@ -25,6 +25,10 @@ config = pdfkit.configuration(
 def get_db():
     return sqlite3.connect("database.db")
 
+def get_db_connection():
+    conn = sqlite3.connect('database.db')  # change db name if different
+    conn.row_factory = sqlite3.Row
+    return conn
 # ---------------- SIGNUP ----------------
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
@@ -85,7 +89,83 @@ def dashboard():
     if "user_id" not in session:
         return redirect("/login")
 
-    return render_template("dashboard.html", name=session["user_name"])
+    conn = get_db_connection()
+
+    resumes = conn.execute(
+        "SELECT * FROM resumes WHERE user_id=? ORDER BY created_at DESC",
+        (session["user_id"],)
+    ).fetchall()
+
+    conn.close()
+
+    return render_template(
+        "dashboard.html",
+        name=session["user_name"],
+        resumes=resumes
+    )
+
+
+
+
+
+@app.route("/save-resume", methods=["POST"])
+def save_resume():
+    if "user_id" not in session:
+        return redirect("/login")
+
+    title = request.form.get("title") or "My Resume"
+    resume_html = request.form.get("resume_html")
+
+    if not resume_html or len(resume_html.strip()) < 50:
+        return "Invalid resume content", 400
+
+    conn = get_db_connection()
+    conn.execute(
+        "INSERT INTO resumes (user_id, title, resume_html) VALUES (?, ?, ?)",
+        (session["user_id"], title, resume_html)
+    )
+    conn.commit()
+    conn.close()
+
+    return redirect("/dashboard")
+
+
+
+
+@app.route("/view-resume/<int:id>")
+def view_resume(id):
+    if "user_id" not in session:
+        return redirect("/login")
+
+    conn = get_db_connection()
+    data = conn.execute(
+        "SELECT resume_html FROM resumes WHERE id=? AND user_id=?",
+        (id, session["user_id"])
+    ).fetchone()
+    conn.close()
+
+    if not data:
+        return "Unauthorized", 403
+
+    return data["resume_html"]
+
+
+
+@app.route("/delete-resume/<int:id>")
+def delete_resume(id):
+
+    conn = sqlite3.connect("database.db")
+    conn.execute(
+    "DELETE FROM resumes WHERE id=? AND user_id=?",
+    (id, session["user_id"])
+)
+    conn.commit()
+    conn.close()
+
+    return redirect("/dashboard")
+
+
+
 
 
 # --------------- LOGOUT -----------------
@@ -165,16 +245,7 @@ def preview():
     data = process_form_data(request.form)
     template = session.get("template")
 
-    photo = request.files.get("photo")
-
-    if photo and photo.filename != "":
-        filename = secure_filename(photo.filename)
-        filepath = os.path.join(UPLOAD_FOLDER, filename)
-        photo.save(filepath)
-        data["photo"] = f"/static/uploads/{filename}"
-    else:
-        data["photo"] = None
-
+    
     # Custom sections
     custom_sections = {}
     for i in range(1, 11):
@@ -241,9 +312,25 @@ def preview():
 # ---------------- DOWNLOAD ----------------
 @app.route("/download-resume", methods=["POST"])
 def download_resume():
+
     template = session.get("template")
     html = request.form.get("resume_html")
+    user_id = session.get("user_id")
 
+    # 🔥 SAVE TO DATABASE (ADDED PART)
+    if user_id and html:
+        conn = sqlite3.connect("database.db")
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "INSERT INTO resumes (user_id, template, resume_html) VALUES (?, ?, ?)",
+            (user_id, template, html)
+        )
+
+        conn.commit()
+        conn.close()
+
+    # ✅ EXISTING PDF CODE (UNCHANGED)
     pdf = pdfkit.from_string(
         html,
         False,
@@ -260,6 +347,7 @@ def download_resume():
     response = make_response(pdf)
     response.headers["Content-Type"] = "application/pdf"
     response.headers["Content-Disposition"] = "attachment; filename=resume.pdf"
+
     return response
 
 # ---------------- INTERVIEW HOME ----------------

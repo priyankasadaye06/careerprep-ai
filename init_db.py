@@ -576,9 +576,20 @@ CREATE TABLE IF NOT EXISTS users (
 """)
 
 
+# pdf save on dashboard
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS resumes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    template TEXT,
+    resume_html TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+""")
 
 conn.commit()
 conn.close()
 
 print("✅ Database updated with questions!")
 print("Users table created")
+print("Database and table created successfully!")

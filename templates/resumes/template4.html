@@ -122,10 +122,12 @@
 
 </div>
 
-<!-- DOWNLOAD BUTTON -->
-<div style="text-align:center; margin-top:30px;">
+<!-- ACTION BUTTONS -->
+<div style="text-align:center; margin-top:30px; display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
+
+    <!-- DOWNLOAD FORM -->
     <form action="/download-resume" method="POST" id="downloadForm">
-        <input type="hidden" name="resume_html" id="resume_html">
+        <input type="hidden" name="resume_html" id="download_html">
 
         <button type="submit"
         style="
@@ -136,15 +138,41 @@
             border-radius:6px;
             font-size:16px;
             cursor:pointer;">
-            Download PDF
+            ⬇ Download PDF
         </button>
     </form>
+
+    <!-- SAVE FORM -->
+    <form action="/save-resume" method="POST" id="saveForm">
+        <input type="hidden" name="title" value="{{ name }} Resume">
+        <input type="hidden" name="resume_html" id="save_html">
+
+        <button type="submit"
+        style="
+            padding:12px 25px;
+            background:#28a745;
+            color:white;
+            border:none;
+            border-radius:6px;
+            font-size:16px;
+            cursor:pointer;">
+            💾 Save Resume
+        </button>
+    </form>
+
 </div>
 
 <script>
+function getResumeHTML() {
+    return document.querySelector(".resume").outerHTML;
+}
+
 document.getElementById("downloadForm").addEventListener("submit", function(){
-    document.getElementById("resume_html").value =
-        document.querySelector(".resume").outerHTML;
+    document.getElementById("download_html").value = getResumeHTML();
+});
+
+document.getElementById("saveForm").addEventListener("submit", function(){
+    document.getElementById("save_html").value = getResumeHTML();
 });
 </script>
 
